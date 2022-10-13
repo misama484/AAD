@@ -1,0 +1,7 @@
+Lorem ipsum <strong>DOLOR</strong> sit amet, consectetur adipiscing elit, 
+sed do eiusmod tempor incididunt ut labore et <strong>DOLOR</strong>e 
+magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
+laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure <strong>DOLOR</strong> 
+in reprehenderit in voluptate velit esse cillum <strong>DOLOR</strong>e eu 
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, 
+sunt in culpa qui officia deserunt mollit anim id est laborum.
