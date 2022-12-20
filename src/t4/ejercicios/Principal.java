@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -31,11 +32,29 @@ public class Principal {
 		FileReader fr = new FileReader(datosCsv);
 		BufferedReader br = new BufferedReader(fr);
 		String linea = br.readLine();
+		ArrayList<String> libros = new ArrayList<String>();
+		ArrayList<String> libro = new ArrayList<String>();
 		while(linea != null) {		//cortar el string linea en subString para crear el objeto libro
 			System.out.println(linea);
+			libros.add(linea);
+			//String[] arrayDatos = linea.split(";");			
 			linea = br.readLine();
 		}
 		
+		//POSIBILIDAD DE PASAR DIRECTAMENTE LA LINEA CON LOS DATOS DEL LIBRO COMO JSON DIRECTAMENTE A MONGO??
+		
+		for(String lib : libros) {
+			String[] arrayLibro = lib.split(";");
+			for(int i = 0; i < arrayLibro.length ; i++) {	//extraer datos del array(datos de cada libro) y crear objeto Libro
+				String titulo = arrayLibro[i];
+			}
+			
+			System.out.println("Libro => " + lib);
+		}
+		
+		
+		
+		/*
 		//Iniciamos la conexion
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		List<String> DBName = mongoClient.getDatabaseNames();
@@ -60,7 +79,7 @@ public class Principal {
 		
 		//con esto cerrmos la conexion a la bd
 		mongoClient.close();
-
+*/
 	}
 
 }
