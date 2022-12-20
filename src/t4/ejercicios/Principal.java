@@ -1,5 +1,10 @@
 package t4.ejercicios;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -17,13 +22,25 @@ import static com.mongodb.client.model.Filters.*;
 
 public class Principal {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		
+		//preparamos el archivo csv para extraer los datos y crear objetos libro
+		//recibir fichero csv y pasar a objetos libro?
+		//pasar a arrays objetos libro y subir a mongodb?
+		File datosCsv = new File("Ejercicios_T4_MongoDB_Datos.csv");
+		FileReader fr = new FileReader(datosCsv);
+		BufferedReader br = new BufferedReader(fr);
+		String linea = br.readLine();
+		while(linea != null) {		//cortar el string linea en subString para crear el objeto libro
+			System.out.println(linea);
+			linea = br.readLine();
+		}
 		
 		//Iniciamos la conexion
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		List<String> DBName = mongoClient.getDatabaseNames();
 		//JOptionPane.showMessageDialog(null, DBName.toString());
-		MongoDatabase database = mongoClient.getDatabase("Biblioteca");
+		MongoDatabase database = mongoClient.getDatabase("Biblioteca");	//CAMBIAR A NOMBRE DE NUEVA BASE DE DATOS PARA PODER CREARLA
 		MongoCollection<Document> collection = database.getCollection("Libros");
 		
 		//OPERACIONES CRUD	
