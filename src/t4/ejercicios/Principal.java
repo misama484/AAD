@@ -24,7 +24,7 @@ import static com.mongodb.client.model.Filters.*;
 public class Principal {
 
 	public static void main(String[] args) throws IOException {
-		
+		/*
 		//preparamos el archivo csv para extraer los datos y crear objetos libro
 		//recibir fichero csv y pasar a objetos libro?
 		//pasar a arrays objetos libro y subir a mongodb?
@@ -59,7 +59,7 @@ public class Principal {
 		for (Libro lib : biblioteca) {
 			System.out.println("Libro => " + lib.toString());
 		}
-		
+		*/
 		System.out.println("\n===== ACCESO A MONGO =====\n");
 		//INICIAMOS LA CONEXION
 		//CREAMOS LA BASE DE DATOS
@@ -70,8 +70,8 @@ public class Principal {
 		MongoCollection<Document> collection = database.getCollection("Libros2");
 		
 		//OPERACIONES CRUD	
-		/*
-		//creamos una lista de documentos y le anyadimo cada documento con los datos de los libros del ArrayList biblioteca
+		/*	FUNCIONA OK
+		//creamos una lista de documentos y le anyadimo cada documento con los datos de los libros del ArrayList biblioteca 
 		//insertamos la coleccion en la bd creada.
 		ArrayList<Document> listaDocs = new ArrayList<Document>();
 		for(Libro libro : biblioteca) {
@@ -99,7 +99,33 @@ public class Principal {
 			System.out.println(obj.getString("titulo"));
 			//System.out.println(cursor.next().toJson());
 		}
-	
+		
+		//OBTENER EL TAMANYO DE LA COLECCION
+		
+		System.out.println("Tamanyo de la coleccion ==> " + collection.count() + " elementos.");
+		
+		//INSERTAR NUEVOS ELEMENTOS EN LA COLECCION
+		
+		//ACTUALIZAR ELEMENTOS DE LA COLECCION
+		
+		//mostramos los elementos de la coleccion
+		System.out.println("============");
+		cursor = collection.find().iterator();
+		while(cursor.hasNext()) {
+			System.out.println(cursor.next().toJson());
+		}
+		
+		//actualizamos solo un documento
+		System.out.println("==== Actualizamos elementos ======");
+		collection.updateOne(eq("anyoNacimiento", 0), new Document("$set", new Document("anyoNacimiento", 10)));
+		
+		//volvemos a mostrar el contenido de la coleccion
+		System.out.println("============");
+		cursor = collection.find().iterator();
+		while(cursor.hasNext()) {
+			System.out.println(cursor.next().toJson());
+		}
+		
 		
 		//con esto cerrmos la conexion a la bd
 		mongoClient.close();
