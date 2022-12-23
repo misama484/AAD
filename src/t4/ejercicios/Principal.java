@@ -106,8 +106,7 @@ public class Principal {
 		// Bson
 		MongoCursor<Document> cursor = collection.find().iterator();
 		while (cursor.hasNext()) {
-			// System.out.println(cursor.next().toJson());
-			// JOptionPane.showMessageDialog(null, cursor.next().toJson());
+
 			JSONObject obj = new JSONObject(cursor.next().toJson());
 			System.out.println(obj.getString("autor"));
 			// System.out.println(cursor.next().toJson());
