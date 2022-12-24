@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.json.JSONObject;
 
 import com.mongodb.MongoClient;
@@ -43,6 +44,9 @@ public class Principal {
 	// Declaramos los elementos necesarios
 	// entrada de teclado
 	static Scanner teclado;
+	//coleccion
+	static MongoCollection<Document> collection;
+	static MongoCursor<Document> cursor;
 
 	public static void main(String[] args) throws IOException {
 
@@ -53,8 +57,14 @@ public class Principal {
 		Consola("Conectado con la base de datos...");
 		// INICIAMOS LA CONEXION
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
-		MongoDatabase database = mongoClient.getDatabase("BibliotecaEj6");
-		MongoCollection<Document> collection = database.getCollection("LibrosEj6");
+		MongoDatabase database = mongoClient.getDatabase("Biblioteca");
+		collection = database.getCollection("Libros");
+		
+		//importamos los libros del csv
+		//ArrayList<Libro> biblioteca = importaDatos();
+		//los anyadimos a la bd
+		//agregaVarios(biblioteca);
+		
 		Integer elementosBd = (int) collection.count();
 		Consola("Elementos en bd: " + elementosBd.toString());
 		// Mostramos menu
@@ -65,7 +75,65 @@ public class Principal {
 		Consola("4. Actualizar libro");
 		Consola("5. Recuperar todos");
 		Consola("6. Salir");
+		
+		//creamos interfaz de usuario
+		int opcion = teclado.nextInt();
+		while(true) {
+			switch(opcion) {
+			case 1:
+				creaLibro();
+				break;
+			case 2:
+				Consola("Introduzca id del libro: ");
+				int id = teclado.nextInt();
+				mostrarLibro(id);
+				break;
+			}
+		}
 
+	}
+
+	private static void mostrarLibro(int id) {
+		Bson query = eq("id", id);
+		cursor = collection.find(query).iterator();
+		while (cursor.hasNext()) {
+			System.out.println(cursor.next().toJson());
+		}
+		
+	}
+
+
+	private static void creaLibro() {
+		//AL EJECUTAR, MUESTRA DOS CAMPOS A LA VEZ
+		Consola("Introduzca los datos del libro:");
+		Consola("Titulo: ");
+		String titulo = teclado.nextLine();
+		Consola("Autor: ");
+		String autor = teclado.nextLine();
+		Consola("Anyo de Nacimiento:");
+		int anyoNacimiento = teclado.nextInt();
+		Consola("Anyo de Publicacion:");
+		int anyoPublicacion = teclado.nextInt();
+		Consola("Editorial:");
+		String editorial = teclado.nextLine();
+		Consola("Numero de Paginas:");
+		int numPaginas = teclado.nextInt();
+		int id = (int) (collection.count() + 1);
+		//creamos objeto Libro
+		Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas);
+		Consola(libro.toString());
+		
+		//ANYADIMOS A LA BD
+		Document doc = new Document();
+		doc.append("id", libro.getId());
+		doc.append("titutlo", libro.getTitulo());
+		doc.append("autor", libro.getAutor());
+		doc.append("anyoNacimiento", libro.getAnyNacimiento());
+		doc.append("anyoPublicacion", libro.getAnyoPublicacion());
+		doc.append("editorial", libro.getEditorial());
+		doc.append("paginas", libro.getNumPaginas());		
+		collection.insertOne(doc);		
+		
 	}
 
 	public static ArrayList<Libro> importaDatos() throws IOException {
@@ -105,6 +173,22 @@ public class Principal {
 		return biblioteca;
 	}
 
+	public static void agregaVarios(ArrayList<Libro> biblioteca) {
+		ArrayList<Document> listaDocs = new ArrayList<Document>();
+		for (Libro libro : biblioteca) {
+			Document doc = new Document();
+			doc.append("id", libro.getId());
+			doc.append("titulo", libro.getTitulo());
+			doc.append("autor", libro.getAutor());
+			doc.append("anyoNacimiento", libro.getAnyNacimiento());
+			doc.append("anyoPublicacion", libro.getAnyoPublicacion());
+			doc.append("editorial", libro.getEditorial());
+			doc.append("numPaginas", libro.getNumPaginas());
+			listaDocs.add(doc);
+		}
+		collection.insertMany(listaDocs);
+	}
+	
 	public static void Consola(String mensaje) {
 		System.out.println(mensaje);
 	}
