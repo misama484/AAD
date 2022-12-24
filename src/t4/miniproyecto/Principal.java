@@ -97,8 +97,16 @@ public class Principal {
 		Bson query = eq("id", id);
 		cursor = collection.find(query).iterator();
 		while (cursor.hasNext()) {
-			System.out.println(cursor.next().toJson());
+			//System.out.println(cursor.next().toJson());
+			JSONObject obj = new JSONObject(cursor.next().toJson());
+			Integer id2 = obj.getInt("id");
+			Consola("ID" + id2.toString());
+			String titulo = obj.getString("titulo");
+			Consola("TITULO: " + titulo);
+			
+			
 		}
+		
 		
 	}
 
