@@ -44,7 +44,7 @@ public class Principal {
 	// Declaramos los elementos necesarios
 	// entrada de teclado
 	static Scanner teclado;
-	//coleccion
+	// coleccion
 	static MongoCollection<Document> collection;
 	static MongoCursor<Document> cursor;
 
@@ -59,12 +59,12 @@ public class Principal {
 		MongoClient mongoClient = new MongoClient("localhost", 27017);
 		MongoDatabase database = mongoClient.getDatabase("Biblioteca");
 		collection = database.getCollection("Libros");
-		
-		//importamos los libros del csv
-		//ArrayList<Libro> biblioteca = importaDatos();
-		//los anyadimos a la bd
-		//agregaVarios(biblioteca);
-		
+
+		// importamos los libros del csv
+		// ArrayList<Libro> biblioteca = importaDatos();
+		// los anyadimos a la bd
+		// agregaVarios(biblioteca);
+
 		Integer elementosBd = (int) collection.count();
 		Consola("Elementos en bd: " + elementosBd.toString());
 		// Mostramos menu
@@ -75,11 +75,13 @@ public class Principal {
 		Consola("4. Actualizar libro");
 		Consola("5. Recuperar todos");
 		Consola("6. Salir");
-		
-		//creamos interfaz de usuario
-		int opcion = teclado.nextInt();
-		while(true) {
-			switch(opcion) {
+
+		// creamos interfaz de usuario
+
+		while (true) {
+			Consola("Introduzca la opcion deseada:");
+			int opcion = teclado.nextInt();
+			switch (opcion) {
 			case 1:
 				creaLibro();
 				break;
@@ -88,7 +90,122 @@ public class Principal {
 				int id = teclado.nextInt();
 				mostrarLibro(id);
 				break;
+			case 3:
+				Consola("Introduzca id del libro a borrar: ");
+				id = teclado.nextInt();
+				borrarLibro(id);
+				break;
+			case 4:
+				Consola("Introduzca id del libro a actualizar: ");
+				id = teclado.nextInt();
+				actualizaLibro(id);
+				break;
+			case 5:
+				mostrarBiblioteca();
+				break;
+			case 6:
+				Consola("Cerrando conexion...");
+				mongoClient.close();
+				Consola("Hasta luego, gracias");
+				System.exit(0);
 			}
+		}
+
+	}
+
+	private static void mostrarBiblioteca() {		
+		cursor = collection.find().iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		while (cursor.hasNext()) {
+			JSONObject obj = new JSONObject(cursor.next().toJson());
+			Integer id2 = obj.getInt("id");
+			Integer anyoNacimiento = obj.getInt("anyoNacimiento");
+			Integer anyoPublicacion = obj.getInt("anyoPublicacion");
+			Integer numPaginas = obj.getInt("numPaginas");
+			Consola("ID: " + id2.toString() + " - TITULO: " + obj.getString("titulo") + " - AUTOR: "
+					+ obj.getString("autor") + " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
+					+ " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: "
+					+ obj.getString("editorial") + " - NUMERO DE PAGINAS: " + numPaginas.toString());
+
+		}
+		
+	}
+
+	private static void actualizaLibro(int id) {
+		// localizamos libro
+		Bson query = eq("id", id);
+		cursor = collection.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		//almacenamos el libro en JSON para acceder a los campos
+		JSONObject obj = null;
+		while (cursor.hasNext()) {
+			obj = new JSONObject(cursor.next().toJson());
+		}
+		Consola("Que desea actualizar?: ");
+		String opcion = teclado.next();
+		//anyadimos los campos a una lista para comprobar errores de teclado
+		ArrayList<String> campos = new ArrayList<String>();
+		campos.add("id");
+		campos.add("titulo");
+		campos.add("autor");
+		campos.add("anyoNacimiento");
+		campos.add("anyoPublicacion");
+		campos.add("editorial");
+		campos.add("numPaginas");
+		//comprobamos errores
+		if (!campos.contains(opcion)) {
+			Consola("INTRODUZCA CAMPO CORRECTO");
+			return;
+		}
+		//comprobamos el tipo de dato a editar, si es un campo de int, entrara en el if
+		if (opcion.equals("anyoNacimiento") || opcion.equals("anyoPubicacion") || opcion.equals("numPaginas")) {
+			Consola("Nuevo valor de " + opcion);
+			int valor = Integer.parseInt(teclado.next());
+			collection.updateOne(eq(opcion, obj.getInt(opcion)), new Document("$set", new Document(opcion, valor)));
+		} else {
+			Consola("Nuevo valor de " + opcion);
+			String valor = teclado.next();
+			collection.updateOne(eq(opcion, obj.getString(opcion)), new Document("$set", new Document(opcion, valor)));
+		}
+
+	}
+
+	private static void borrarLibro(int id) {
+		Bson query = eq("id", id);
+		cursor = collection.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		while (cursor.hasNext()) {
+			// System.out.println(cursor.next().toJson());
+			JSONObject obj = new JSONObject(cursor.next().toJson());
+			Integer id2 = obj.getInt("id");
+			Integer anyoNacimiento = obj.getInt("anyoNacimiento");
+			Integer anyoPublicacion = obj.getInt("anyoPublicacion");
+			Integer numPaginas = obj.getInt("numPaginas");
+			Consola("Libro a Borrar: ");
+			Consola("ID: " + id2.toString() + " - TITULO: " + obj.getString("titulo") + " - AUTOR: "
+					+ obj.getString("autor") + " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
+					+ " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: "
+					+ obj.getString("editorial") + " - NUMERO DE PAGINAS: " + numPaginas.toString());
+		}
+		Consola("Esta seguro? ");
+		String opcion = teclado.next();
+
+		if (opcion.equalsIgnoreCase("si")) {
+			collection.deleteOne(query);
+			Consola("Libro borrado!!");
+		}
+
+		else {
+			return;
 		}
 
 	}
@@ -96,23 +213,27 @@ public class Principal {
 	private static void mostrarLibro(int id) {
 		Bson query = eq("id", id);
 		cursor = collection.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
 		while (cursor.hasNext()) {
-			//System.out.println(cursor.next().toJson());
+			// System.out.println(cursor.next().toJson());
 			JSONObject obj = new JSONObject(cursor.next().toJson());
 			Integer id2 = obj.getInt("id");
-			Consola("ID" + id2.toString());
-			String titulo = obj.getString("titulo");
-			Consola("TITULO: " + titulo);
-			
-			
+			Integer anyoNacimiento = obj.getInt("anyoNacimiento");
+			Integer anyoPublicacion = obj.getInt("anyoPublicacion");
+			Integer numPaginas = obj.getInt("numPaginas");
+			Consola("ID: " + id2.toString() + " - TITULO: " + obj.getString("titulo") + " - AUTOR: "
+					+ obj.getString("autor") + " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
+					+ " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: "
+					+ obj.getString("editorial") + " - NUMERO DE PAGINAS: " + numPaginas.toString());
+
 		}
-		
-		
 	}
 
-
 	private static void creaLibro() {
-		//AL EJECUTAR, MUESTRA DOS CAMPOS A LA VEZ
+		// AL EJECUTAR, MUESTRA DOS CAMPOS A LA VEZ
 		Consola("Introduzca los datos del libro:");
 		Consola("Titulo: ");
 		String titulo = teclado.nextLine();
@@ -127,11 +248,11 @@ public class Principal {
 		Consola("Numero de Paginas:");
 		int numPaginas = teclado.nextInt();
 		int id = (int) (collection.count() + 1);
-		//creamos objeto Libro
+		// creamos objeto Libro
 		Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas);
 		Consola(libro.toString());
-		
-		//ANYADIMOS A LA BD
+
+		// ANYADIMOS A LA BD
 		Document doc = new Document();
 		doc.append("id", libro.getId());
 		doc.append("titutlo", libro.getTitulo());
@@ -139,9 +260,9 @@ public class Principal {
 		doc.append("anyoNacimiento", libro.getAnyNacimiento());
 		doc.append("anyoPublicacion", libro.getAnyoPublicacion());
 		doc.append("editorial", libro.getEditorial());
-		doc.append("paginas", libro.getNumPaginas());		
-		collection.insertOne(doc);		
-		
+		doc.append("paginas", libro.getNumPaginas());
+		collection.insertOne(doc);
+
 	}
 
 	public static ArrayList<Libro> importaDatos() throws IOException {
@@ -196,7 +317,7 @@ public class Principal {
 		}
 		collection.insertMany(listaDocs);
 	}
-	
+
 	public static void Consola(String mensaje) {
 		System.out.println(mensaje);
 	}
