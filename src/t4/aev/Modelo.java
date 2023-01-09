@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import org.bson.Document;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ public class Modelo {
 	private String password;
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 	private String usuarioLog;
+	private PanelLogin panelLogin;
 
 	MongoClient mongoClient;
 	MongoDatabase database;
@@ -87,31 +89,29 @@ public class Modelo {
 				Integer anyoNacimiento = obj.getInt("Anyo_nacimiento");
 				Integer anyoPublicacion = obj.getInt("Anyo_publicacion");
 				Integer numPaginas = obj.getInt("Numero_paginas");
-				results.add("ID: " + id2.toString() + "\n - TITULO: " + obj.getString("Titulo") + " \n- AUTOR: "+ obj.getString("Autor") + "\n - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()+ "\n - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + "\n - EDITORAL: "	+ obj.getString("Editorial") + "\n - NUMERO DE PAGINAS: " + numPaginas.toString());
+				results.add("ID: " + id2.toString() + "\n - TITULO: " + obj.getString("Titulo") + " \n- AUTOR: "
+						+ obj.getString("Autor") + "\n - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
+						+ "\n - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + "\n - EDITORAL: "
+						+ obj.getString("Editorial") + "\n - NUMERO DE PAGINAS: " + numPaginas.toString());
 			}
-		}else{
-		JOptionPane.showMessageDialog(null, "Credenciales erroneas", "Alerta", JOptionPane.WARNING_MESSAGE);
-		mongoClient.close();
-	}
-	return results;
+		} else {
+			JOptionPane.showMessageDialog(null, "Credenciales erroneas", "Alerta", JOptionPane.WARNING_MESSAGE);
+			mongoClient.close();
+		}
+		return results;
 	}
 
 	// comprueba que los datos introducidos corresponden con los almacenados en BD
 	public boolean validaUsuario() {
-		JFrame f = new JFrame("password");
-		JPasswordField pwd = new JPasswordField();
-		JLabel l1 = new JLabel("Contrasenya");
-		l1.setBounds(20,100, 80,30);    
-        pwd.setBounds(100,100,100,30);    
-           f.add(pwd);  f.add(l1);  
-           f.setSize(300,300);    
-           f.setLayout(null);    
-           f.setVisible(true); 
+		panelLogin = new PanelLogin();
+		panelLogin.setVisible(true);
 		
-		String usuario = JOptionPane.showInputDialog("Introduzca nombre de usuario:");
 		
-		String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
 		
+		// String usuario = JOptionPane.showInputDialog("Introduzca nombre de
+		// usuario:");
+
+		// String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
 
 		String passEncrypt = encriptarContrasenya(password);
 		Usuario user = null;
