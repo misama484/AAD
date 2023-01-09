@@ -1,0 +1,6 @@
+{
+    "ip": "localhost",
+    "port": "27017",
+    "bdname": "BibliotecaAEV3",
+    "collectionname": "books"
+}
