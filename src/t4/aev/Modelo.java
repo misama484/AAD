@@ -30,7 +30,7 @@ public class Modelo {
 	private String password;
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 	private String usuarioLog;
-	private PanelLogin panelLogin;
+	
 
 	MongoClient mongoClient;
 	MongoDatabase database;
@@ -90,28 +90,23 @@ public class Modelo {
 				Integer anyoPublicacion = obj.getInt("Anyo_publicacion");
 				Integer numPaginas = obj.getInt("Numero_paginas");
 				results.add("ID: " + id2.toString() + "\n - TITULO: " + obj.getString("Titulo") + " \n- AUTOR: "
-						+ obj.getString("Autor") + "\n - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
-						+ "\n - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + "\n - EDITORAL: "
-						+ obj.getString("Editorial") + "\n - NUMERO DE PAGINAS: " + numPaginas.toString());
+						+ obj.getString("Autor"));
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Credenciales erroneas", "Alerta", JOptionPane.WARNING_MESSAGE);
 			mongoClient.close();
 		}
+		
+		
 		return results;
 	}
 
 	// comprueba que los datos introducidos corresponden con los almacenados en BD
 	public boolean validaUsuario() {
-		panelLogin = new PanelLogin();
-		panelLogin.setVisible(true);
-		
-		
-		
-		// String usuario = JOptionPane.showInputDialog("Introduzca nombre de
-		// usuario:");
+				
+		String usuario = JOptionPane.showInputDialog("Introduzca nombre de usuario:");
 
-		// String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
+		String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
 
 		String passEncrypt = encriptarContrasenya(password);
 		Usuario user = null;
@@ -174,4 +169,11 @@ public class Modelo {
 		}
 		return generatedPassword;
 	}
+	
+	public String ElementosBD() {
+		Integer elementosBD = (int) collectionBooks.count();
+		String elementos = elementosBD.toString();		
+		return ("Cantidad de elementos en coleccion: " + elementos);
+	}
 }
+
