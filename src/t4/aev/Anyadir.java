@@ -11,13 +11,16 @@ import javax.swing.JEditorPane;
 public class Anyadir {
 	
 	private JFrame frame;
-	private JButton btnEditGuardar, btnBuscar, btnReemplazar;
+	private JButton btnGuardar, btnBorrar, btnImagen;
 	private JEditorPane editorPane;
 	private JTextField textFieldTitulo;
 	private JTextField textFieldAutor;
 	private JTextField textFieldEditorial;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldAnyoNac;
+	private JTextField textFieldAnyoPub;
+	private JTextField textFieldNumPaginas;
+	private JLabel lblImagen;
+	private JTextField textFieldImagen;
 
 	public Anyadir() {
 		initialize();
@@ -36,22 +39,22 @@ public class Anyadir {
 		editorPane = new JEditorPane();
 		scrollPane_Original.setViewportView(editorPane);
 		
-		btnEditGuardar = new JButton("Guardar");
-		btnEditGuardar.setBounds(645, 445, 120, 27);
-		frame.getContentPane().add(btnEditGuardar);
+		btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(645, 445, 120, 27);
+		frame.getContentPane().add(btnGuardar);
 		
-		btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(515, 445, 120, 27);
-		frame.getContentPane().add(btnBuscar);
+		btnBorrar = new JButton("Borrar");
+		btnBorrar.setBounds(515, 445, 120, 27);
+		frame.getContentPane().add(btnBorrar);
 		
 		JLabel lblTitulo = new JLabel("Titulo");
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setBounds(10, 307, 82, 14);
 		frame.getContentPane().add(lblTitulo);
 		
-		btnReemplazar = new JButton("Reemplazar");
-		btnReemplazar.setBounds(515, 483, 120, 27);
-		frame.getContentPane().add(btnReemplazar);
+		btnImagen = new JButton("SELECCIONAR IMAGEN");
+		btnImagen.setBounds(276, 585, 145, 27);
+		frame.getContentPane().add(btnImagen);
 		
 		textFieldTitulo = new JTextField();
 		textFieldTitulo.setColumns(10);
@@ -83,20 +86,40 @@ public class Anyadir {
 		lblAnyoNac.setBounds(0, 383, 102, 14);
 		frame.getContentPane().add(lblAnyoNac);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(102, 377, 200, 27);
-		frame.getContentPane().add(textField);
+		textFieldAnyoNac = new JTextField();
+		textFieldAnyoNac.setColumns(10);
+		textFieldAnyoNac.setBounds(102, 377, 200, 27);
+		frame.getContentPane().add(textFieldAnyoNac);
 		
 		JLabel lblAnyoPub = new JLabel("Anyo Publicacion");
 		lblAnyoPub.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAnyoPub.setBounds(0, 421, 102, 14);
 		frame.getContentPane().add(lblAnyoPub);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(102, 415, 200, 27);
-		frame.getContentPane().add(textField_1);
+		textFieldAnyoPub = new JTextField();
+		textFieldAnyoPub.setColumns(10);
+		textFieldAnyoPub.setBounds(102, 415, 200, 27);
+		frame.getContentPane().add(textFieldAnyoPub);
+		
+		JLabel lblNumPaginas = new JLabel("Num. Paginas");
+		lblNumPaginas.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNumPaginas.setBounds(449, 345, 82, 14);
+		frame.getContentPane().add(lblNumPaginas);
+		
+		textFieldNumPaginas = new JTextField();
+		textFieldNumPaginas.setColumns(10);
+		textFieldNumPaginas.setBounds(523, 339, 200, 27);
+		frame.getContentPane().add(textFieldNumPaginas);
+		
+		lblImagen = new JLabel("Imagen");
+		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImagen.setBounds(27, 527, 82, 14);
+		frame.getContentPane().add(lblImagen);
+		
+		textFieldImagen = new JTextField();
+		textFieldImagen.setColumns(10);
+		textFieldImagen.setBounds(138, 456, 128, 156);
+		frame.getContentPane().add(textFieldImagen);
 		
 		
 		
@@ -112,21 +135,65 @@ public class Anyadir {
 		return editorPane;
 	}
 	
-	public JButton getButtonMostrar() {
-		return btnBuscar;
+	public JButton getButtonBorrar() {
+		return btnBorrar;
 	}
 	
-	public JButton getBtnEditGuardar() {
-		return btnEditGuardar;
+	public JButton getBtnGuardar() {
+		return btnGuardar;
 	}
 	
-	public JButton getBtnReemplazar() {
-		return btnReemplazar;
+	public JButton getBtnImagen() {
+		return btnImagen;
 	}
 	
 	public JButton getBtnBuscar() {
-		return btnBuscar;
+		return btnBorrar;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public JButton getBtnBorrar() {
+		return btnBorrar;
+	}
+
+	public JTextField getTextFieldTitulo() {
+		return textFieldTitulo;
+	}
+
+	public JTextField getTextFieldAutor() {
+		return textFieldAutor;
+	}
+
+	public JTextField getTextFieldEditorial() {
+		return textFieldEditorial;
+	}
+
+	public JTextField getTextFieldAnyoNac() {
+		return textFieldAnyoNac;
+	}
+
+	public JTextField getTextFieldAnyoPub() {
+		return textFieldAnyoPub;
+	}
+
+	public JTextField getTextFieldNumPaginas() {
+		return textFieldNumPaginas;
+	}
+
+	public JTextField getTextFieldImagen() {
+		return textFieldImagen;
+	}
+
+	public void setTextFieldImagen(JTextField textFieldImagen) {
+		this.textFieldImagen = textFieldImagen;
+	}
+
+	public void setEditorPane(JEditorPane editorPane) {
+		this.editorPane = editorPane;
 	}
 	
-
+	
 }

@@ -30,7 +30,7 @@ public class Modelo {
 	private String password;
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 	private String usuarioLog;
-	
+	private Boolean userLogged = false;
 
 	MongoClient mongoClient;
 	MongoDatabase database;
@@ -39,6 +39,9 @@ public class Modelo {
 	MongoCursor<Document> cursor;
 
 	// GETTERS & SETTERS
+	public Boolean getUserLogged() {
+		return userLogged;
+	}
 	public String getUsuario() {
 		return usuario;
 	}
@@ -96,6 +99,7 @@ public class Modelo {
 			JOptionPane.showMessageDialog(null, "Credenciales erroneas", "Alerta", JOptionPane.WARNING_MESSAGE);
 			mongoClient.close();
 		}
+		userLogged = true;
 		
 		
 		return results;
@@ -174,6 +178,25 @@ public class Modelo {
 		Integer elementosBD = (int) collectionBooks.count();
 		String elementos = elementosBD.toString();		
 		return ("Cantidad de elementos en coleccion: " + elementos);
+	}
+	
+	//anyade un libro a la coleccion, le pasamos un objeto libro y lo anyade.
+	public String AnyadeLibro(Libro libro) {
+		String response = null;
+		
+		Document doc = new Document();
+		doc.append("Id", libro.getId());
+		doc.append("Iitutlo", libro.getTitulo());
+		doc.append("Autor", libro.getAutor());
+		doc.append("Anyo_nacimiento", libro.getAnyNacimiento());
+		doc.append("Anyo_publicacion", libro.getAnyoPublicacion());
+		doc.append("Editorial", libro.getEditorial());
+		doc.append("Paginas", libro.getNumPaginas());
+		doc.append("Imagen", libro.getImagen());
+
+		collectionBooks.insertOne(doc);
+		response = "Anyadido libro: " + libro.getTitulo() + " a la base de datos";
+		return response;
 	}
 }
 

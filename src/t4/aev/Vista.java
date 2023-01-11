@@ -34,7 +34,7 @@ public class Vista extends JFrame {
 	private JLabel lblTitulo;
 	private JLabel lblSql;
 	private JLabel lblEstado;
-	private JButton btnMostrarTablas;
+	private JButton btnAnyadirLibro;
 	private JScrollPane scrollPane;
 	private JTextArea textAreaPrincipal;
 	private JButton btnMostrarCampos;
@@ -97,10 +97,10 @@ public class Vista extends JFrame {
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblTitulo);
 
-		btnMostrarTablas = new JButton("MOSTRAR TABLAS BD");
-		btnMostrarTablas.setBounds(1038, 674, 138, 23);
-		btnMostrarTablas.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(btnMostrarTablas);
+		btnAnyadirLibro = new JButton("LIBRO NUEVO");
+		btnAnyadirLibro.setBounds(1038, 674, 138, 23);
+		btnAnyadirLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(btnAnyadirLibro);
 
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(21, 98, 980, 569);
@@ -178,8 +178,8 @@ public class Vista extends JFrame {
 		return btnSql;
 	}
 
-	public JButton getBtnMostrarTablas() {
-		return btnMostrarTablas;
+	public JButton getBtnAnyadirLibro() {
+		return btnAnyadirLibro;
 	}
 
 	public JLabel getLblTitulo() {
