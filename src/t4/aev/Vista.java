@@ -91,7 +91,7 @@ public class Vista extends JFrame {
 		lblSql.setBounds(21, 678, 980, 14);
 		frame.getContentPane().add(lblSql);
 
-		lblTitulo = new JLabel("AEV2 T2 AAD Gestion de Biblioteca");
+		lblTitulo = new JLabel("AEV3 T4 AAD Gestion de Biblioteca - MongoDB");
 		lblTitulo.setBounds(0, 24, 1204, 14);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -108,6 +108,7 @@ public class Vista extends JFrame {
 
 		textAreaPrincipal = new JTextArea();
 		textAreaPrincipal.setLineWrap(true);
+		textAreaPrincipal.setEditable(false);
 		scrollPane.setViewportView(textAreaPrincipal);
 
 		btnMostrarCampos = new JButton("MOSTRAR CAMPOS");
@@ -193,4 +194,10 @@ public class Vista extends JFrame {
 	public JLabel getLblEstado() {
 		return lblEstado;
 	}
+
+	public void setLblEstado(JLabel lblEstado) {
+		this.lblEstado = lblEstado;
+	}
+	
+	
 }

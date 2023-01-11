@@ -13,7 +13,7 @@ public class Controlador {
 	private Vista vista;
 	private Anyadir anyadir;
 
-	private ActionListener ALConectar, ALAnyadirLibro, ALGuardarLibro;
+	private ActionListener ALConectar, ALAnyadirLibro, ALGuardarLibro, ALCerrar;
 
 	// CONSTRUCTOR
 	public Controlador(Modelo modelo, Vista vista, Anyadir anyadir) {
@@ -35,6 +35,7 @@ public class Controlador {
 					vista.getTextAreaPrincipal().append(bdName + "\n");
 				}
 				vista.getTextAreaTablas().setText(modelo.ElementosBD());
+				vista.getLblEstado().setText("LOGUEADO COMO: " + modelo.getUsuario() + " EN IP: " + modelo.getIp());
 
 			}
 
@@ -42,7 +43,6 @@ public class Controlador {
 		vista.getBtnConectar().addActionListener(ALConectar);
 
 		ALAnyadirLibro = new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (modelo.getUserLogged()) {
@@ -50,15 +50,39 @@ public class Controlador {
 					anyadir.setVisible(true);
 
 					// funcion del boton guardar libro, que lo subira a la coleccion
+					// recoge datos de textFields y llama a agregaLibro()
 					ALGuardarLibro = new ActionListener() {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							anyadir.getEditorPane().setText(agregarLibro());
+							anyadir.getEditorPane().setContentType("text");
+							String titulo = anyadir.getTextFieldTitulo().getText();
+							String autor = anyadir.getTextFieldAutor().getText();
+							String anyoNacimiento = anyadir.getTextFieldAnyoNac().getText();
+							String anyoPublicacion = anyadir.getTextFieldAnyoPub().getText();
+							String editorial = anyadir.getTextFieldEditorial().getText();
+							String numPaginas = anyadir.getTextFieldNumPaginas().getText();
+							String imagen = anyadir.getTextFieldImagen().getText();
+							anyadir.getEditorPane().setText(titulo + "\n" + autor + "\n" + anyoNacimiento + "\n"
+									+ anyoPublicacion + "\n" + editorial + "\n" + numPaginas + " paginas\n" + imagen);
+							anyadir.getEditorPane().setText(agregarLibro(titulo, autor, anyoNacimiento, anyoPublicacion,
+									editorial, numPaginas, imagen));
 						}
 
 					};
 					anyadir.getBtnGuardar().addActionListener(ALGuardarLibro);
+					
+					//Funcion del boton cerrar - cierra ventana
+					ALCerrar = new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							anyadir.setVisible(false);
+							
+						}
+						
+					};
+					anyadir.getBtnCerrar().addActionListener(ALCerrar);
 
 				} else {
 					JOptionPane.showMessageDialog(new JFrame(), "USUARIO NO LOGUEADO", "ERROR",
@@ -77,27 +101,20 @@ public class Controlador {
 		return modelo.conectaMongo();
 	}
 
-	// agrega un libro a la coleccion, recabando los datos de los textField de la
-	// ventana anyadir y llamando al metodo
+	// agrega un libro a la coleccion, recibe strings de la ventana y convierte los
+	// necesarios a int y llamando al metodo
 	// modelo.AnyadeLibro, que lo manda a mongo
-	private String agregarLibro() {
-		String titulo = anyadir.getTextFieldTitulo().getText();
-		System.out.println(titulo.toString());
-		String autor = anyadir.getTextFieldAutor().getText();
-		System.out.println(autor);
-		String anyoNacimientoString = anyadir.getTextFieldAnyoNac().getText();
-		System.out.println(anyoNacimientoString);
-		
-		int anyoNacimiento = Integer.valueOf(anyoNacimientoString);
-		Integer anyoPublicacion = Integer.parseInt(anyadir.getTextFieldAnyoPub().getText());
-		String editorial = anyadir.getTextFieldEditorial().getText();
-		Integer numPaginas = Integer.parseInt(anyadir.getTextFieldNumPaginas().getText());
-		String imagen = anyadir.getTextFieldImagen().getText();
+	// devuelve un string con el resultado de la operacion.
+	private String agregarLibro(String titulo, String autor, String anyoNacimiento, String anyoPublicacion,
+			String editorial, String numPaginas, String imagen) {
+		int anyoNacimientoInt = Integer.parseInt(anyoNacimiento);
+		int anyoPublicacionInt = Integer.parseInt(anyoPublicacion);
+		int numPaginasInt = Integer.parseInt(numPaginas);
 
-		Libro libro = new Libro(titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+		Libro libro = new Libro(titulo, autor, anyoNacimientoInt, anyoPublicacionInt, editorial, numPaginasInt, imagen);
 
-		//modelo.AnyadeLibro(libro);
-		return "Agregado libro " + titulo + " a la coleccion.";
+		String response = modelo.AnyadeLibro(libro);
+		return response;
 	}
 
 }

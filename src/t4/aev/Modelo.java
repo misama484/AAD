@@ -1,6 +1,10 @@
 package t4.aev;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
@@ -28,6 +32,10 @@ public class Modelo {
 
 	private String usuario;
 	private String password;
+	private String ip;
+	private int port;
+	private String bdName;
+	private String collection;
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 	private String usuarioLog;
 	private Boolean userLogged = false;
@@ -57,11 +65,63 @@ public class Modelo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getIp() {
+		return ip;
+	}
+	public int getPort() {
+		return port;
+	}
+	public String getBdName() {
+		return bdName;
+	}
+	public String getCollection() {
+		return collection;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	public void setPort(int port) {
+		this.port = port;
+	}
+	public void setBdName(String bdName) {
+		this.bdName = bdName;
+	}
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
 
 	// CARGAR FICHERO JSON
 	public String cargaJson(File ficheroJSON) {
 		return null;
-
+	}
+	
+	//EXTRAER DATOS DE FICHERO JSON
+	//recibe un fichero json y extrae los datos para asignarlos a las variables de conexion
+	//modificando el json deveriamos poder conectar con AWS
+	public void DatosConexion() {
+		String datosJson = "";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("DatosConexion.json"));
+			String linea;
+			while ((linea = br.readLine()) != null) {
+				datosJson += linea;
+			}
+			br.close();
+			System.out.println(datosJson);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//convertimos a objeto JSON
+		JSONObject jsonCon = new JSONObject(datosJson);
+		System.out.println("String json => " + jsonCon.toString());
+		
+		setIp(jsonCon.getString("ip"));
+		setPort(jsonCon.getInt("port"));
+		setBdName(jsonCon.getString("bdname"));
+		setCollection(jsonCon.getString("collectionname"));
 	}
 
 	// CONECTAR CON DB
@@ -72,12 +132,13 @@ public class Modelo {
 	// conexion a server AWS
 	public ArrayList<String> conectaMongo() {
 		ArrayList<String> results = new ArrayList<String>();
+		DatosConexion();
 		// conectamos con mongo(en futuro, pasar como parametros ip y puerto)
-		mongoClient = new MongoClient("localhost", 27017);
-		database = mongoClient.getDatabase("BibliotecaAEV3");
+		mongoClient = new MongoClient(getIp(), getPort());
+		database = mongoClient.getDatabase(getBdName());
 		collectionUsers = database.getCollection("users");
 		if (validaUsuario()) {
-			collectionBooks = database.getCollection("books");
+			collectionBooks = database.getCollection(getCollection());
 			MongoCursor<Document> cursor;
 			// List<String> dbList = mongoClient.getDatabaseNames();
 			// getDatabaseNames esta deprecado, usar este
@@ -102,6 +163,8 @@ public class Modelo {
 		userLogged = true;
 		
 		
+		
+		
 		return results;
 	}
 
@@ -109,6 +172,7 @@ public class Modelo {
 	public boolean validaUsuario() {
 				
 		String usuario = JOptionPane.showInputDialog("Introduzca nombre de usuario:");
+		setUsuario(usuario);
 
 		String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
 
@@ -181,22 +245,24 @@ public class Modelo {
 	}
 	
 	//anyade un libro a la coleccion, le pasamos un objeto libro y lo anyade.
-	public String AnyadeLibro(Libro libro) {
-		String response = null;
-		
+	public String AnyadeLibro(Libro libro) {		
+		int id = (int) (collectionBooks.count() + 1);
 		Document doc = new Document();
-		doc.append("Id", libro.getId());
-		doc.append("Iitutlo", libro.getTitulo());
+		doc.append("Id", id);
+		doc.append("Titulo", libro.getTitulo());
 		doc.append("Autor", libro.getAutor());
 		doc.append("Anyo_nacimiento", libro.getAnyNacimiento());
 		doc.append("Anyo_publicacion", libro.getAnyoPublicacion());
 		doc.append("Editorial", libro.getEditorial());
-		doc.append("Paginas", libro.getNumPaginas());
-		doc.append("Imagen", libro.getImagen());
+		doc.append("Numero_paginas", libro.getNumPaginas());
+		doc.append("Thumbnail", libro.getImagen());
 
 		collectionBooks.insertOne(doc);
-		response = "Anyadido libro: " + libro.getTitulo() + " a la base de datos";
+		String response = "Anyadido libro: " + libro.getTitulo() + " a la base de datos" + doc.toString();
 		return response;
 	}
+	
+	
+	
 }
 

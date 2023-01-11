@@ -7,11 +7,12 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JEditorPane;
+import javax.swing.JFormattedTextField;
 
 public class Anyadir {
 	
 	private JFrame frame;
-	private JButton btnGuardar, btnBorrar, btnImagen;
+	private JButton btnGuardar, btnCerrar, btnImagen;
 	private JEditorPane editorPane;
 	private JTextField textFieldTitulo;
 	private JTextField textFieldAutor;
@@ -43,9 +44,9 @@ public class Anyadir {
 		btnGuardar.setBounds(645, 445, 120, 27);
 		frame.getContentPane().add(btnGuardar);
 		
-		btnBorrar = new JButton("Borrar");
-		btnBorrar.setBounds(515, 445, 120, 27);
-		frame.getContentPane().add(btnBorrar);
+		btnCerrar = new JButton("Cerrar");
+		btnCerrar.setBounds(515, 445, 120, 27);
+		frame.getContentPane().add(btnCerrar);
 		
 		JLabel lblTitulo = new JLabel("Titulo");
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -136,7 +137,7 @@ public class Anyadir {
 	}
 	
 	public JButton getButtonBorrar() {
-		return btnBorrar;
+		return btnCerrar;
 	}
 	
 	public JButton getBtnGuardar() {
@@ -148,15 +149,15 @@ public class Anyadir {
 	}
 	
 	public JButton getBtnBuscar() {
-		return btnBorrar;
+		return btnCerrar;
 	}
 
 	public JFrame getFrame() {
 		return frame;
 	}
 
-	public JButton getBtnBorrar() {
-		return btnBorrar;
+	public JButton getBtnCerrar() {
+		return btnCerrar;
 	}
 
 	public JTextField getTextFieldTitulo() {
@@ -194,6 +195,6 @@ public class Anyadir {
 	public void setEditorPane(JEditorPane editorPane) {
 		this.editorPane = editorPane;
 	}
-	
+
 	
 }
