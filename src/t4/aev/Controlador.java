@@ -271,6 +271,7 @@ public class Controlador {
 					ALBuscarCriterio = new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
+							buscar.getEditorPane().setText("");
 							String parametroBusqueda = null;
 							String opcion = (String) buscar.getComboBoxCriterio().getSelectedItem();
 							if(opcion.equals("Mayor_que")) {
@@ -283,11 +284,10 @@ public class Controlador {
 							String seleccion = (String) buscar.getComboBox().getSelectedItem();
 							ArrayList<Libro> response = BuscarLibroCriterio(seleccion, valor, parametroBusqueda);
 			
-							
-							
-
-							//buscar.getEditorPane().setText(modelo.BuscarLibroCriterio(seleccion, valor, parametroBusqueda));
-							
+							for(Libro libro : response) {
+								String book = libro.toString();
+								buscar.getEditorPane().setText(buscar.getEditorPane().getText() + "\n" + book);								
+							}				
 							
 						}
 						
