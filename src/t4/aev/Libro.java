@@ -46,15 +46,15 @@ public class Libro {
 		return editorial;
 	}
 
-	public int getAnyNacimiento() {
+	public Integer getAnyNacimiento() {
 		return anyNacimiento;
 	}
 
-	public int getAnyoPublicacion() {
+	public Integer getAnyoPublicacion() {
 		return anyoPublicacion;
 	}
 
-	public int getNumPaginas() {
+	public Integer getNumPaginas() {
 		return numPaginas;
 	}
 	

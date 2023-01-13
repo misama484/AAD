@@ -15,7 +15,7 @@ import javax.swing.border.EmptyBorder;
 public class Editar extends JFrame {
 
 	private JFrame frmEditarLibro;
-	private JButton btnGuardar, btnCerrar, btnImagen, btnCargarLibro;
+	private JButton btnGuardar, btnCerrar, btnImagen, btnCargarLibro, btnBorrarCampos;
 	private JEditorPane editorPane;
 	private JTextField textFieldTitulo;
 	private JTextField textFieldAutor;
@@ -23,7 +23,7 @@ public class Editar extends JFrame {
 	private JTextField textFieldAnyoNac;
 	private JTextField textFieldAnyoPub;
 	private JTextField textFieldNumPaginas;
-	private JLabel lblImagen;
+	private JLabel lblImagenTitulo, lblImagen;
 	private JTextField textFieldImagen;
 	private JTextField textFieldId;
 
@@ -42,6 +42,7 @@ public class Editar extends JFrame {
 		frmEditarLibro.getContentPane().add(scrollPane_Original);
 		
 		editorPane = new JEditorPane();
+		editorPane.setEditable(false);
 		editorPane.setText("INTRODUZCA ID DEL LIBRO A EDITAR");
 		scrollPane_Original.setViewportView(editorPane);
 		
@@ -117,10 +118,10 @@ public class Editar extends JFrame {
 		textFieldNumPaginas.setBounds(541, 243, 200, 27);
 		frmEditarLibro.getContentPane().add(textFieldNumPaginas);
 		
-		lblImagen = new JLabel("Imagen");
-		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagen.setBounds(53, 431, 82, 14);
-		frmEditarLibro.getContentPane().add(lblImagen);
+		lblImagenTitulo = new JLabel("Imagen");
+		lblImagenTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImagenTitulo.setBounds(53, 431, 82, 14);
+		frmEditarLibro.getContentPane().add(lblImagenTitulo);
 		
 		textFieldImagen = new JTextField();
 		textFieldImagen.setColumns(10);
@@ -141,6 +142,15 @@ public class Editar extends JFrame {
 		btnCargarLibro = new JButton("CARGAR LIBRO");
 		btnCargarLibro.setBounds(262, 167, 120, 27);
 		frmEditarLibro.getContentPane().add(btnCargarLibro);
+		
+		btnBorrarCampos = new JButton("Borrar Campos");
+		btnBorrarCampos.setBounds(645, 483, 120, 27);
+		frmEditarLibro.getContentPane().add(btnBorrarCampos);
+		
+		lblImagen = new JLabel("Imagen");
+		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImagen.setBounds(315, 357, 110, 131);
+		frmEditarLibro.getContentPane().add(lblImagen);
 		
 		
 		
@@ -213,5 +223,29 @@ public class Editar extends JFrame {
 
 	public JTextField getTextFieldId() {
 		return textFieldId;
+	}
+
+	public JButton getBtnBorrarCampos() {
+		return btnBorrarCampos;
+	}
+
+	public JLabel getLblImagen() {
+		return lblImagen;
+	}
+
+	public void setLblImagen(JLabel lblImagen) {
+		this.lblImagen = lblImagen;
+	}
+
+	public void setBtnGuardar(JButton btnGuardar) {
+		this.btnGuardar = btnGuardar;
+	}
+
+	public JLabel getLblImagenTitulo() {
+		return lblImagenTitulo;
+	}
+
+	public JFrame getFrmEditarLibro() {
+		return frmEditarLibro;
 	}
 }

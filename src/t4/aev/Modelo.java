@@ -53,6 +53,7 @@ public class Modelo {
 	public Boolean getUserLogged() {
 		return userLogged;
 	}
+
 	public String getUsuario() {
 		return usuario;
 	}
@@ -68,28 +69,35 @@ public class Modelo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getIp() {
 		return ip;
 	}
+
 	public int getPort() {
 		return port;
 	}
+
 	public String getBdName() {
 		return bdName;
 	}
+
 	public String getCollection() {
 		return collection;
 	}
+
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
+
 	public void setPort(int port) {
 		this.port = port;
 	}
+
 	public void setBdName(String bdName) {
 		this.bdName = bdName;
 	}
+
 	public void setCollection(String collection) {
 		this.collection = collection;
 	}
@@ -98,10 +106,11 @@ public class Modelo {
 	public String cargaJson(File ficheroJSON) {
 		return null;
 	}
-	
-	//EXTRAER DATOS DE FICHERO JSON
-	//recibe un fichero json y extrae los datos para asignarlos a las variables de conexion
-	//modificando el json deveriamos poder conectar con AWS
+
+	// EXTRAER DATOS DE FICHERO JSON
+	// recibe un fichero json y extrae los datos para asignarlos a las variables de
+	// conexion
+	// modificando el json deveriamos poder conectar con AWS
 	public void DatosConexion() {
 		String datosJson = "";
 		try {
@@ -116,11 +125,11 @@ public class Modelo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//convertimos a objeto JSON
+
+		// convertimos a objeto JSON
 		JSONObject jsonCon = new JSONObject(datosJson);
 		System.out.println("String json => " + jsonCon.toString());
-		
+
 		setIp(jsonCon.getString("ip"));
 		setPort(jsonCon.getInt("port"));
 		setBdName(jsonCon.getString("bdname"));
@@ -164,16 +173,13 @@ public class Modelo {
 			mongoClient.close();
 		}
 		userLogged = true;
-		
-		
-		
-		
+
 		return results;
 	}
 
 	// comprueba que los datos introducidos corresponden con los almacenados en BD
 	public boolean validaUsuario() {
-				
+
 		String usuario = JOptionPane.showInputDialog("Introduzca nombre de usuario:");
 		setUsuario(usuario);
 
@@ -240,15 +246,15 @@ public class Modelo {
 		}
 		return generatedPassword;
 	}
-	
+
 	public String ElementosBD() {
 		Integer elementosBD = (int) collectionBooks.count();
-		String elementos = elementosBD.toString();		
+		String elementos = elementosBD.toString();
 		return ("Cantidad de elementos en coleccion: " + elementos);
 	}
-	
-	//anyade un libro a la coleccion, le pasamos un objeto libro y lo anyade.
-	public String AnyadeLibro(Libro libro) {		
+
+	// anyade un libro a la coleccion, le pasamos un objeto libro y lo anyade.
+	public String AnyadeLibro(Libro libro) {
 		int id = (int) (collectionBooks.count() + 1);
 		Document doc = new Document();
 		doc.append("Id", id);
@@ -264,38 +270,140 @@ public class Modelo {
 		String response = "Anyadido libro: " + libro.getTitulo() + " a la base de datos" + doc.toString();
 		return response;
 	}
-	
+
 	public Libro CargarLibro(int id) {
 		Integer id2 = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
 		String titulo = null, autor = null, editorial = null, imagen = null;
-		Bson query = eq("id", id);
+
+		Bson query = eq("Id", id);
 		cursor = collectionBooks.find(query).iterator();
 		// controlamos que el id exista
 		if (!cursor.hasNext()) {
 			System.err.println("El id no existe");
+			JOptionPane.showMessageDialog(new JFrame(), "EL ID NO EXISTE", "ERROR", JOptionPane.WARNING_MESSAGE);
 		}
 		while (cursor.hasNext()) {
 			// System.out.println(cursor.next().toJson());
 			JSONObject obj = new JSONObject(cursor.next().toJson());
 			id2 = obj.getInt("Id");
 			titulo = obj.getString("Titulo");
-			autor = obj.getString("Autor");			
+			autor = obj.getString("Autor");
 			anyoNacimiento = obj.getInt("Anyo_nacimiento");
 			anyoPublicacion = obj.getInt("Anyo_publicacion");
 			editorial = obj.getString("Editorial");
 			numPaginas = obj.getInt("Numero_paginas");
 			imagen = obj.getString("Thumbnail");
-			System.out.println("ID: " + id2.toString() + " - TITULO: " + obj.getString("Titulo") + " - AUTOR: "
-					+ obj.getString("Autor") + " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
-					+ " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: "
-					+ obj.getString("Editorial") + " - NUMERO DE PAGINAS: " + numPaginas.toString());
+			/*
+			 * System.out.println("ID: " + id2.toString() + " - TITULO: " +
+			 * obj.getString("Titulo") + " - AUTOR: " + obj.getString("Autor") +
+			 * " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString() +
+			 * " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: " +
+			 * obj.getString("Editorial") + " - NUMERO DE PAGINAS: " +
+			 * numPaginas.toString());
+			 */
 		}
-		
+
 		Libro libro = new Libro(id2, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
 		return libro;
-		
-		
 	}
-	
-}
 
+	public String EditarLibro(Libro libro) {
+		int input = JOptionPane.showConfirmDialog(null, "¿Desear editar el libro?", "Atención",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (input == 0) {
+			Integer id2 = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+			String titulo = null, autor = null, editorial = null, imagen = null;
+			String response = "";
+			// localizamos libro
+			int id = libro.getId();
+			Bson query = eq("Id", id);
+			cursor = collectionBooks.find(query).iterator();
+			// controlamos que el id exista
+			if (!cursor.hasNext()) {
+				response = "ID NO ENCONTRADO";
+			}
+
+			// almacenamos el libro en JSON para acceder a los campos
+			JSONObject obj = new JSONObject();
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				id2 = obj.getInt("Id");
+				titulo = obj.getString("Titulo");
+				autor = obj.getString("Autor");
+				anyoNacimiento = obj.getInt("Anyo_nacimiento");
+				anyoPublicacion = obj.getInt("Anyo_publicacion");
+				editorial = obj.getString("Editorial");
+				numPaginas = obj.getInt("Numero_paginas");
+				imagen = obj.getString("Thumbnail");
+
+			}
+			// comprobamos si los campos son distintos y enviamos la modificacion
+			if (titulo != libro.getTitulo()) {
+				collectionBooks.updateOne(eq("Titulo", obj.getString("Titulo")),
+						new Document("$set", new Document("Titulo", libro.getTitulo().toString())));
+			}
+			if (autor != libro.getAutor()) {
+				collectionBooks.updateOne(eq("Autor", obj.getString("Autor")),
+						new Document("$set", new Document("Autor", libro.getAutor().toString())));
+			}
+			if (anyoNacimiento != libro.getAnyNacimiento()) {
+				collectionBooks.updateOne(eq("Anyo_nacimiento", obj.getInt("Anyo_nacimiento")),
+						new Document("$set", new Document("Anyo_nacimiento", libro.getAnyNacimiento())));
+			}
+			if (anyoPublicacion != libro.getAnyoPublicacion()) {
+				collectionBooks.updateOne(eq("Anyo_publicacion", obj.getInt("Anyo_publicacion")),
+						new Document("$set", new Document("Anyo_publicacion", libro.getAnyoPublicacion())));
+			}
+			if (editorial != libro.getEditorial()) {
+				collectionBooks.updateOne(eq("Editorial", obj.getString("Editorial")),
+						new Document("$set", new Document("Editorial", libro.getEditorial())));
+			}
+			if (numPaginas != libro.getNumPaginas()) {
+				collectionBooks.updateOne(eq("Numero_paginas", obj.getInt("Numero_paginas")),
+						new Document("$set", new Document("Numero_paginas", libro.getNumPaginas())));
+			}
+			if (imagen != libro.getImagen()) {
+				collectionBooks.updateOne(eq("Thumbnail", obj.getString("Thumbnail")),
+						new Document("$set", new Document("Thumbnail", libro.getImagen())));
+			}
+
+			response = "Editado libro: " + libro.getTitulo() + " en la base de datos";
+			return response;
+		}
+		return "";
+	}
+
+	// recibe el campo y el valor a buscar, devuelve el libro
+	public String BuscarLibro(String campo, String valor) {
+		String response = "";
+		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+		String titulo = null, autor = null, editorial = null, imagen = null;
+		Bson query = eq(campo, valor);
+		cursor = collectionBooks.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			response = "DATOS NO ENCONTRADOS";
+		}
+
+		// almacenamos el libro en JSON para acceder a los campos
+		JSONObject obj = new JSONObject();
+		while (cursor.hasNext()) {
+			obj = new JSONObject(cursor.next().toJson());
+			id = obj.getInt("Id");
+			titulo = obj.getString("Titulo");
+			autor = obj.getString("Autor");
+			anyoNacimiento = obj.getInt("Anyo_nacimiento");
+			anyoPublicacion = obj.getInt("Anyo_publicacion");
+			editorial = obj.getString("Editorial");
+			numPaginas = obj.getInt("Numero_paginas");
+			imagen = obj.getString("Thumbnail");
+		}
+		System.out.println(obj.toString());
+		Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+		
+		
+		return obj.toString();
+	}
+
+}

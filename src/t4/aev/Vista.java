@@ -42,6 +42,7 @@ public class Vista extends JFrame {
 	private JLabel lblNombreDeTabla;
 	private JScrollPane scrollPane_1;
 	private JTextArea textAreaTablas;
+	private JButton btnBuscarLibro;
 
 	public Vista() {
 		initialize();
@@ -117,12 +118,12 @@ public class Vista extends JFrame {
 		frame.getContentPane().add(btnEditarLibro);
 
 		textFieldTabla = new JTextField();
-		textFieldTabla.setBounds(1038, 605, 138, 26);
+		textFieldTabla.setBounds(1038, 464, 138, 26);
 		textFieldTabla.setColumns(10);
 		frame.getContentPane().add(textFieldTabla);
 
 		lblNombreDeTabla = new JLabel("Nombre de tabla");
-		lblNombreDeTabla.setBounds(1038, 592, 138, 14);
+		lblNombreDeTabla.setBounds(1038, 451, 138, 14);
 		lblNombreDeTabla.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblNombreDeTabla);
 
@@ -133,6 +134,11 @@ public class Vista extends JFrame {
 		textAreaTablas = new JTextArea();
 		textAreaTablas.setLineWrap(true);
 		scrollPane_1.setViewportView(textAreaTablas);
+		
+		btnBuscarLibro = new JButton("BUSCAR LIBRO");
+		btnBuscarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnBuscarLibro.setBounds(1038, 605, 138, 23);
+		frame.getContentPane().add(btnBuscarLibro);
 
 		this.frame.setVisible(true);
 	}
@@ -197,6 +203,10 @@ public class Vista extends JFrame {
 
 	public void setLblEstado(JLabel lblEstado) {
 		this.lblEstado = lblEstado;
+	}
+
+	public JButton getBtnBuscarLibro() {
+		return btnBuscarLibro;
 	}
 	
 	

@@ -79,7 +79,7 @@ public class Anyadir {
 		
 		JLabel lblEditorial = new JLabel("Editorial");
 		lblEditorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEditorial.setBounds(449, 307, 82, 14);
+		lblEditorial.setBounds(431, 307, 82, 14);
 		frame.getContentPane().add(lblEditorial);
 		
 		JLabel lblAnyoNac = new JLabel("Anyo Nacimineto");
@@ -104,7 +104,7 @@ public class Anyadir {
 		
 		JLabel lblNumPaginas = new JLabel("Num. Paginas");
 		lblNumPaginas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumPaginas.setBounds(449, 345, 82, 14);
+		lblNumPaginas.setBounds(431, 345, 82, 14);
 		frame.getContentPane().add(lblNumPaginas);
 		
 		textFieldNumPaginas = new JTextField();
