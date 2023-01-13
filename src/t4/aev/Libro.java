@@ -26,6 +26,7 @@ public class Libro {
 		this.numPaginas = numPaginas;
 		this.imagen = imagen;
 	}
+	
 	//GEETERS & SETTERS
 	
 	

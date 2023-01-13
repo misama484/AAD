@@ -1,25 +1,16 @@
 package t4.aev;
 
-import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.*;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -376,14 +367,25 @@ public class Modelo {
 
 	// recibe el campo y el valor a buscar, devuelve el libro
 	public String BuscarLibro(String campo, String valor) {
-		String response = "";
+
+		String response = null;
 		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
 		String titulo = null, autor = null, editorial = null, imagen = null;
-		Bson query = eq(campo, valor);
+		
+
+		Bson query = null;
+		if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+				int valor2 = Integer.parseInt(valor);
+				query = eq(campo, valor2);
+			} else {
+				query = eq(campo, valor);
+			}
+
 		cursor = collectionBooks.find(query).iterator();
 		// controlamos que el id exista
 		if (!cursor.hasNext()) {
 			response = "DATOS NO ENCONTRADOS";
+			return response;
 		}
 
 		// almacenamos el libro en JSON para acceder a los campos
@@ -397,13 +399,116 @@ public class Modelo {
 			anyoPublicacion = obj.getInt("Anyo_publicacion");
 			editorial = obj.getString("Editorial");
 			numPaginas = obj.getInt("Numero_paginas");
-			imagen = obj.getString("Thumbnail");
+			imagen = "";
+			Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+			response = libro.toString();
 		}
 		System.out.println(obj.toString());
-		Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+
 		
 		
-		return obj.toString();
+		return response;
+	}
+	
+	
+	// recibe el campo y el valor a buscar, devuelve el libro
+		public ArrayList<Libro> BuscarLibroCriterio(String campo, String valor, String parametroBusqueda) {
+
+			ArrayList<Libro> response = new ArrayList<Libro>();
+			Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+			String titulo = null, autor = null, editorial = null, imagen = null;
+			Bson query = null;
+			if(parametroBusqueda.equals("eq")) {			
+				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+					int valor2 = Integer.parseInt(valor);
+					query = eq(campo, valor2);
+				} else {
+					query = eq(campo, valor);
+				}
+			}
+			
+			if(parametroBusqueda.equals("gte")) {			
+				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+					int valor2 = Integer.parseInt(valor);
+					query = gte(campo, valor2);
+				} else {
+					query = gte(campo, valor);
+				}
+			}
+			if(parametroBusqueda.equals("lte")) {			
+				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+					int valor2 = Integer.parseInt(valor);
+					query = lte(campo, valor2);
+				} else {
+					query = lte(campo, valor);
+				}
+			}
+			
+
+			cursor = collectionBooks.find(query).iterator();
+			// controlamos que el id exista
+			if (!cursor.hasNext()) {
+				//response.add("DATOS NO ENCONTRADOS");
+				return null;
+			}
+
+			// almacenamos el libro en JSON para acceder a los campos
+			JSONObject obj = new JSONObject();
+			while (cursor.hasNext()) {
+				obj = new JSONObject(cursor.next().toJson());
+				id = obj.getInt("Id");
+				titulo = obj.getString("Titulo");
+				autor = obj.getString("Autor");
+				anyoNacimiento = obj.getInt("Anyo_nacimiento");
+				anyoPublicacion = obj.getInt("Anyo_publicacion");
+				editorial = obj.getString("Editorial");
+				numPaginas = obj.getInt("Numero_paginas");
+				imagen = "";
+				Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+				response.add(libro);
+			}
+			System.out.println(obj.toString());
+
+			
+			
+			return response;
+		}
+	
+
+	public boolean BorrarLibro(String campo, String valor) {
+		String response = "";
+		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+		String titulo = null, autor = null, editorial = null, imagen = null;
+
+		Bson query;
+		if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+			int valor2 = Integer.parseInt(valor);
+			query = eq(campo, valor2);
+		} else {
+			query = eq(campo, valor);
+		}
+		cursor = collectionBooks.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		JSONObject obj = new JSONObject();
+		while (cursor.hasNext()) {
+			obj = new JSONObject(cursor.next().toJson());
+			id = obj.getInt("Id");
+			titulo = obj.getString("Titulo");
+			autor = obj.getString("Autor");
+			anyoNacimiento = obj.getInt("Anyo_nacimiento");
+			anyoPublicacion = obj.getInt("Anyo_publicacion");
+			editorial = obj.getString("Editorial");
+			numPaginas = obj.getInt("Numero_paginas");
+			imagen = obj.getString("Thumbnail");
+		}
+
+		collectionBooks.deleteOne(query);
+
+		return true;
+
 	}
 
 }

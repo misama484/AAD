@@ -41,7 +41,8 @@ public class Principal {
 		Vista vista = new Vista();
 		Anyadir anyadir = new Anyadir();
 		Editar editar = new Editar();
-		Controlador controlador = new Controlador(modelo, vista, anyadir, editar);
+		Buscar buscar = new Buscar();
+		Controlador controlador = new Controlador(modelo, vista, anyadir, editar, buscar);
 
 
 	}

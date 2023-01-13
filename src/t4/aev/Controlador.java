@@ -13,16 +13,19 @@ public class Controlador {
 	private Vista vista;
 	private Anyadir anyadir;
 	private Editar editar;
+	private Buscar buscarPop;
 
 	private ActionListener ALConectar, ALAnyadirLibro, ALGuardarLibro, ALCerrar, ALEditar, ALCerrarEditar,
-			ALBorrarCampos, ALGuardarCambios, ALCargarLibro, ALBuscarLibro, ALBuscar;
+			ALBorrarCampos, ALGuardarCambios, ALCargarLibro, ALBuscarLibro, ALBuscar, ALBorrarBusqueda, ALEliminar, ALBuscarCriterio, 
+			ALCerrarBusqueda, ALBorrarLibro;
 
 	// CONSTRUCTOR
-	public Controlador(Modelo modelo, Vista vista, Anyadir anyadir, Editar editar) {
+	public Controlador(Modelo modelo, Vista vista, Anyadir anyadir, Editar editar, Buscar buscar) {
 		this.modelo = modelo;
 		this.vista = vista;
 		this.anyadir = anyadir;
 		this.editar = editar;
+		this.buscarPop = buscar;
 		control();
 	}
 
@@ -209,53 +212,87 @@ public class Controlador {
 
 		// funcion del boton BUSCARLIBRO
 		ALBuscarLibro = new ActionListener() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// comprobamos usuario logueado
 				if (modelo.getUserLogged()) {
-					// creamos una ventana editar y la modificamos adecuadamente
-					Editar buscar = new Editar();
-					buscar.setVisible(true);
-					buscar.getFrmEditarLibro().setTitle("Buscar Libro");
-					buscar.getEditorPane().setText("INTRODUZCA ALGUN CAMPO A BUSCAR");
-					buscar.getBtnGuardar().setText("BUSCAR");
-					buscar.getBtnCargarLibro().setVisible(false);
-					buscar.getLblImagen().setVisible(false);
-					buscar.getTextFieldImagen().setVisible(false);
-					buscar.getLblImagenTitulo().setVisible(false);
-					buscar.getBtnImagen().setVisible(false);
-					// buscar.getTextFieldAnyoNac().setEditable(false);
-					// buscar.getTextFieldAnyoPub().setEditable(false);
-					// buscar.getTextFieldNumPaginas().setEditable(false);
+					String campo = "";
+					String valor = "";
 
-					// FUNCION DEL BOTON BUSCAR -- NO ENTRA EN LOS IF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					Buscar buscar = new Buscar();
+					buscar.getBtnBorrarLibro().setVisible(false);
+					buscar.getComboBox().addItem("Id");
+					buscar.getComboBox().addItem("Titulo");
+					buscar.getComboBox().addItem("Autor");
+					buscar.getComboBox().addItem("Anyo_nacimiento");
+					buscar.getComboBox().addItem("Anyo_publicacion");
+					buscar.getComboBox().addItem("Editorial");
+					buscar.getComboBox().addItem("Numero_paginas");
+					buscar.getComboBoxCriterio().addItem("Mayor_que");
+					buscar.getComboBoxCriterio().addItem("Menor_que");
+					buscar.setVisible(true);
+
 					ALBuscar = new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							// preparamos datos a enviar
-							String campo = null, valor = null;
-							System.out.println("-- " + buscar.getTextFieldAutor().getText() + "AUTOR");
-							String titulo = buscar.getTextFieldTitulo().getText();
-							String autor = buscar.getTextFieldAutor().getText();
+							String valor = buscar.getTextFieldCampoBusqueda().getText();
+							String seleccion = (String) buscar.getComboBox().getSelectedItem();
+							String parametroBusqueda = "eq";
 
-							if (titulo != null) {
-								campo = "Titulo";
-								valor = buscar.getTextFieldTitulo().getText();
-							}
-
-							if (autor != null) {
-								campo = "Autor";
-								valor = buscar.getTextFieldAutor().getText();
-							}
-
-							// llamar a metodo buscar de modelo
-							System.out.println(campo + "--" + valor);
-							buscar.getEditorPane().setText(modelo.BuscarLibro(campo, valor));
+							buscar.getEditorPane().setText(modelo.BuscarLibro(seleccion, valor));
 
 						}
 
 					};
-					buscar.getBtnGuardar().addActionListener(ALBuscar);
+					buscar.getBtnBuscar().addActionListener(ALBuscar);
+
+					ALBorrarBusqueda = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							buscar.getEditorPane().setText("");
+							buscar.getTextFieldCampoBusqueda().setText("");
+						}
+
+					};
+					buscar.getBtnBorrarCampos().addActionListener(ALBorrarBusqueda);
+
+					ALCerrarBusqueda = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							buscar.setVisible(false);
+
+						}
+
+					};
+					buscar.getBtnCerrar().addActionListener(ALCerrarBusqueda);
+					
+					ALBuscarCriterio = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String parametroBusqueda = null;
+							String opcion = (String) buscar.getComboBoxCriterio().getSelectedItem();
+							if(opcion.equals("Mayor_que")) {
+								parametroBusqueda = "gte";
+							}
+							else {
+								parametroBusqueda = "lte";
+							}
+							String valor = buscar.getTextFieldCampoBusqueda().getText();
+							String seleccion = (String) buscar.getComboBox().getSelectedItem();
+							ArrayList<Libro> response = BuscarLibroCriterio(seleccion, valor, parametroBusqueda);
+			
+							
+							
+
+							//buscar.getEditorPane().setText(modelo.BuscarLibroCriterio(seleccion, valor, parametroBusqueda));
+							
+							
+						}
+						
+					};
+					buscar.getBtnBuscarCriterio().addActionListener(ALBuscarCriterio);
 
 				} else {
 					JOptionPane.showMessageDialog(new JFrame(), "USUARIO NO LOGUEADO", "ERROR",
@@ -265,6 +302,84 @@ public class Controlador {
 
 		};
 		vista.getBtnBuscarLibro().addActionListener(ALBuscarLibro);
+
+		ALBorrarLibro = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (modelo.getUserLogged()) {
+					String campo = "";
+					String valor = "";
+
+					Buscar borrar = new Buscar();
+					borrar.getFrmEditarLibro().setTitle("Borrar Libro");
+					borrar.getComboBox().addItem("Id");
+					borrar.getComboBox().addItem("Titulo");
+					borrar.getComboBox().addItem("Autor");
+					borrar.getComboBox().addItem("Anyo_nacimiento");
+					borrar.getComboBox().addItem("Anyo_publicacion");
+					borrar.getComboBox().addItem("Editorial");
+					borrar.getComboBox().addItem("Numero_paginas");
+					borrar.setVisible(true);
+					ALBuscar = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// preparamos datos a enviar
+							String valor = borrar.getTextFieldCampoBusqueda().getText();
+							String seleccion = (String) borrar.getComboBox().getSelectedItem();
+
+							borrar.getEditorPane().setText(modelo.BuscarLibro(seleccion, valor));
+
+						}
+
+					};
+					borrar.getBtnBuscar().addActionListener(ALBuscar);
+
+					ALBorrarBusqueda = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							borrar.getEditorPane().setText("");
+							borrar.getTextFieldCampoBusqueda().setText("");
+						}
+
+					};
+					borrar.getBtnBorrarCampos().addActionListener(ALBorrarBusqueda);
+
+					ALCerrarBusqueda = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							borrar.setVisible(false);
+
+						}
+
+					};
+					borrar.getBtnCerrar().addActionListener(ALCerrarBusqueda);
+
+					ALEliminar = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String valor = borrar.getTextFieldCampoBusqueda().getText();
+							String seleccion = (String) borrar.getComboBox().getSelectedItem();
+							int response = JOptionPane.showConfirmDialog(null, "Esta seguro?", "Alerta!", JOptionPane.YES_NO_OPTION);
+							if (response == 0) {
+								if (BorrarLibro(seleccion, valor)) {
+									JOptionPane.showMessageDialog(new JFrame(), "Libro eliminado", "Correcto", JOptionPane.INFORMATION_MESSAGE);
+								}
+							}
+
+						}
+
+					};
+					borrar.getBtnBorrarLibro().addActionListener(ALEliminar);
+
+				} else {
+					JOptionPane.showMessageDialog(new JFrame(), "USUARIO NO LOGUEADO", "ERROR",
+							JOptionPane.WARNING_MESSAGE);
+				}
+
+			}
+		};
+		vista.getBtnBorrarLibro().addActionListener(ALBorrarLibro);
+		
+		
 
 	}
 
@@ -302,9 +417,14 @@ public class Controlador {
 		}
 	}
 
-	private void BuscarLibro(String campo, String valor) {
-		// Libro libro = modelo.BuscarLibro(campo, valor);
-
+	private boolean BorrarLibro(String campo, String valor) {
+		return modelo.BorrarLibro(campo, valor);
+	}
+	 
+	private ArrayList<Libro> BuscarLibroCriterio(String seleccion, String valor, String parametroBusqueda){
+		
+		ArrayList<Libro> response = modelo.BuscarLibroCriterio(seleccion, valor, parametroBusqueda);;
+		return response;
 	}
 
 }

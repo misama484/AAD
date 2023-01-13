@@ -30,6 +30,7 @@ public class Vista extends JFrame {
 	private JButton btnConectar;
 	private JButton btnDesconectar;
 	private JButton btnSql;
+	private JButton btnBorrarLibro;
 
 	private JLabel lblTitulo;
 	private JLabel lblSql;
@@ -93,7 +94,7 @@ public class Vista extends JFrame {
 		frame.getContentPane().add(lblSql);
 
 		lblTitulo = new JLabel("AEV3 T4 AAD Gestion de Biblioteca - MongoDB");
-		lblTitulo.setBounds(0, 24, 1204, 14);
+		lblTitulo.setBounds(0, 11, 1204, 25);
 		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(lblTitulo);
@@ -139,6 +140,11 @@ public class Vista extends JFrame {
 		btnBuscarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnBuscarLibro.setBounds(1038, 605, 138, 23);
 		frame.getContentPane().add(btnBuscarLibro);
+		
+		btnBorrarLibro = new JButton("BORRAR LIBRO");
+		btnBorrarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnBorrarLibro.setBounds(1038, 571, 138, 23);
+		frame.getContentPane().add(btnBorrarLibro);
 
 		this.frame.setVisible(true);
 	}
@@ -208,6 +214,8 @@ public class Vista extends JFrame {
 	public JButton getBtnBuscarLibro() {
 		return btnBuscarLibro;
 	}
-	
-	
+
+	public JButton getBtnBorrarLibro() {
+		return btnBorrarLibro;
+	}
 }
