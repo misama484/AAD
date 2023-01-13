@@ -12,14 +12,16 @@ public class Controlador {
 	private Modelo modelo;
 	private Vista vista;
 	private Anyadir anyadir;
+	private Editar editar;
 
-	private ActionListener ALConectar, ALAnyadirLibro, ALGuardarLibro, ALCerrar;
+	private ActionListener ALConectar, ALAnyadirLibro, ALGuardarLibro, ALCerrar, ALEditar, ALCerrarEditar, ALCargarLibro;
 
 	// CONSTRUCTOR
-	public Controlador(Modelo modelo, Vista vista, Anyadir anyadir) {
+	public Controlador(Modelo modelo, Vista vista, Anyadir anyadir, Editar editar) {
 		this.modelo = modelo;
 		this.vista = vista;
 		this.anyadir = anyadir;
+		this.editar = editar;
 		control();
 	}
 
@@ -71,18 +73,69 @@ public class Controlador {
 
 					};
 					anyadir.getBtnGuardar().addActionListener(ALGuardarLibro);
-					
-					//Funcion del boton cerrar - cierra ventana
+
+					// Funcion del boton cerrar - cierra ventana
 					ALCerrar = new ActionListener() {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							anyadir.setVisible(false);
+
+						}
+
+					};
+					anyadir.getBtnCerrar().addActionListener(ALCerrar);
+
+				} else {
+					JOptionPane.showMessageDialog(new JFrame(), "USUARIO NO LOGUEADO", "ERROR",
+							JOptionPane.WARNING_MESSAGE);
+				}
+
+				ALCerrar = new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						anyadir.setVisible(false);
+
+					}
+
+				};
+				anyadir.getBtnCerrar().addActionListener(ALCerrar);
+
+			}
+
+		};
+		vista.getBtnAnyadirLibro().addActionListener(ALAnyadirLibro);
+
+		// funcion del boton EditarLibro
+		ALEditar = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (modelo.getUserLogged()) {
+					Editar editar = new Editar();
+					editar.setVisible(true);
+					
+					ALCargarLibro = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String id = editar.getTextFieldId().getText();
+							cargarLibro(id);
 							
 						}
 						
 					};
-					anyadir.getBtnCerrar().addActionListener(ALCerrar);
+					editar.getBtnCargarLibro().addActionListener(ALCargarLibro);
+
+					ALCerrarEditar = new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							editar.setVisible(false);
+
+						}
+
+					};
+					editar.getBtnCerrar().addActionListener(ALCerrarEditar);
 
 				} else {
 					JOptionPane.showMessageDialog(new JFrame(), "USUARIO NO LOGUEADO", "ERROR",
@@ -92,7 +145,8 @@ public class Controlador {
 			}
 
 		};
-		vista.getBtnAnyadirLibro().addActionListener(ALAnyadirLibro);
+		vista.getBtnEditarLibro().addActionListener(ALEditar);
+
 	}
 
 	private ArrayList<String> conectaMongo() {
@@ -115,6 +169,18 @@ public class Controlador {
 
 		String response = modelo.AnyadeLibro(libro);
 		return response;
+	}
+	
+	private void cargarLibro(String Id) {
+		int id = Integer.parseInt(Id);
+		Libro libro = modelo.CargarLibro(id);
+		String titulo = libro.getTitulo();
+		editar.getTextFieldTitulo().setText(titulo);
+	}
+	private Libro EditarLibro(int id) {
+		
+		return null;
+		
 	}
 
 }

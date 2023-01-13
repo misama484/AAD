@@ -37,7 +37,7 @@ public class Vista extends JFrame {
 	private JButton btnAnyadirLibro;
 	private JScrollPane scrollPane;
 	private JTextArea textAreaPrincipal;
-	private JButton btnMostrarCampos;
+	private JButton btnEditarLibro;
 	private JTextField textFieldTabla;
 	private JLabel lblNombreDeTabla;
 	private JScrollPane scrollPane_1;
@@ -111,10 +111,10 @@ public class Vista extends JFrame {
 		textAreaPrincipal.setEditable(false);
 		scrollPane.setViewportView(textAreaPrincipal);
 
-		btnMostrarCampos = new JButton("MOSTRAR CAMPOS");
-		btnMostrarCampos.setBounds(1038, 640, 138, 23);
-		btnMostrarCampos.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(btnMostrarCampos);
+		btnEditarLibro = new JButton("EDITAR LIBRO");
+		btnEditarLibro.setBounds(1038, 640, 138, 23);
+		btnEditarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		frame.getContentPane().add(btnEditarLibro);
 
 		textFieldTabla = new JTextField();
 		textFieldTabla.setBounds(1038, 605, 138, 26);
@@ -159,8 +159,8 @@ public class Vista extends JFrame {
 		return textFieldTabla;
 	}
 
-	public JButton getBtnMostrarCampos() {
-		return btnMostrarCampos;
+	public JButton getBtnEditarLibro() {
+		return btnEditarLibro;
 	}
 
 	public JButton getBtnCargaJson() {

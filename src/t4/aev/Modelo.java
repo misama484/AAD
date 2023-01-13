@@ -1,5 +1,7 @@
 package t4.aev;
 
+import static com.mongodb.client.model.Filters.eq;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +22,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.json.JSONObject;
 
 import com.mongodb.MongoClient;
@@ -262,7 +265,37 @@ public class Modelo {
 		return response;
 	}
 	
-	
+	public Libro CargarLibro(int id) {
+		Integer id2 = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+		String titulo = null, autor = null, editorial = null, imagen = null;
+		Bson query = eq("id", id);
+		cursor = collectionBooks.find(query).iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		while (cursor.hasNext()) {
+			// System.out.println(cursor.next().toJson());
+			JSONObject obj = new JSONObject(cursor.next().toJson());
+			id2 = obj.getInt("Id");
+			titulo = obj.getString("Titulo");
+			autor = obj.getString("Autor");			
+			anyoNacimiento = obj.getInt("Anyo_nacimiento");
+			anyoPublicacion = obj.getInt("Anyo_publicacion");
+			editorial = obj.getString("Editorial");
+			numPaginas = obj.getInt("Numero_paginas");
+			imagen = obj.getString("Thumbnail");
+			System.out.println("ID: " + id2.toString() + " - TITULO: " + obj.getString("Titulo") + " - AUTOR: "
+					+ obj.getString("Autor") + " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString()
+					+ " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: "
+					+ obj.getString("Editorial") + " - NUMERO DE PAGINAS: " + numPaginas.toString());
+		}
+		
+		Libro libro = new Libro(id2, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+		return libro;
+		
+		
+	}
 	
 }
 

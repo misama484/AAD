@@ -40,7 +40,8 @@ public class Principal {
 		Modelo modelo = new Modelo();
 		Vista vista = new Vista();
 		Anyadir anyadir = new Anyadir();
-		Controlador controlador = new Controlador(modelo, vista, anyadir);
+		Editar editar = new Editar();
+		Controlador controlador = new Controlador(modelo, vista, anyadir, editar);
 
 
 	}
