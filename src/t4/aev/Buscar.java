@@ -17,7 +17,7 @@ import java.awt.Color;
 public class Buscar extends JFrame {
 
 	private JFrame frmEditarLibro;
-	private JButton btnBuscar, btnCerrar, btnBorrarCampos, btnBorrarLibro;
+	private JButton btnBuscar, btnCerrar, btnBorrarCampos, btnBorrarLibro, btnDetalle;
 	private JEditorPane editorPane;
 	private JTextField textFieldCampoBusqueda;
 	private JComboBox comboBox;
@@ -26,18 +26,19 @@ public class Buscar extends JFrame {
 	private JLabel lblMayorMenor;
 	private JButton btnBuscarCriterio;
 
+	
 	public Buscar() {
 		initialize();
 	}
 	
 	private void initialize() {
 		frmEditarLibro = new JFrame();
-		frmEditarLibro.setTitle("Editar Libro");
+		frmEditarLibro.setTitle("Buscar Libro");
 		frmEditarLibro.setBounds(100, 100, 799, 370);
 		frmEditarLibro.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane_Original = new JScrollPane();
-		scrollPane_Original.setBounds(10, 20, 755, 154);
+		scrollPane_Original.setBounds(10, 20, 763, 154);
 		frmEditarLibro.getContentPane().add(scrollPane_Original);
 		
 		editorPane = new JEditorPane();
@@ -88,6 +89,10 @@ public class Buscar extends JFrame {
 		btnBuscarCriterio = new JButton("Buscar con criterio de busqueda");
 		btnBuscarCriterio.setBounds(160, 278, 185, 27);
 		frmEditarLibro.getContentPane().add(btnBuscarCriterio);
+		
+		btnDetalle = new JButton("Mostrar detalles");
+		btnDetalle.setBounds(370, 242, 120, 27);
+		frmEditarLibro.getContentPane().add(btnDetalle);
 		
 		
 		
@@ -143,4 +148,11 @@ public class Buscar extends JFrame {
 		return comboBoxCriterio;
 	}
 
+	public JButton getBtnDetalle() {
+		return btnDetalle;
+	}
+
+	public JLabel getLblMayorMenor() {
+		return lblMayorMenor;
+	}
 }

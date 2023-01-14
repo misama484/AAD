@@ -60,7 +60,7 @@ public class Editar extends JFrame {
 		frmEditarLibro.getContentPane().add(lblTitulo);
 		
 		btnImagen = new JButton("SELECCIONAR IMAGEN");
-		btnImagen.setBounds(302, 489, 145, 27);
+		btnImagen.setBounds(620, 299, 145, 27);
 		frmEditarLibro.getContentPane().add(btnImagen);
 		
 		textFieldTitulo = new JTextField();
@@ -80,12 +80,12 @@ public class Editar extends JFrame {
 		
 		textFieldEditorial = new JTextField();
 		textFieldEditorial.setColumns(10);
-		textFieldEditorial.setBounds(541, 205, 200, 27);
+		textFieldEditorial.setBounds(128, 365, 200, 27);
 		frmEditarLibro.getContentPane().add(textFieldEditorial);
 		
 		JLabel lblEditorial = new JLabel("Editorial");
 		lblEditorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEditorial.setBounds(449, 211, 82, 14);
+		lblEditorial.setBounds(36, 371, 82, 14);
 		frmEditarLibro.getContentPane().add(lblEditorial);
 		
 		JLabel lblAnyoNac = new JLabel("Anyo Nacimineto");
@@ -110,22 +110,22 @@ public class Editar extends JFrame {
 		
 		JLabel lblNumPaginas = new JLabel("Num. Paginas");
 		lblNumPaginas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumPaginas.setBounds(449, 249, 82, 14);
+		lblNumPaginas.setBounds(36, 409, 82, 14);
 		frmEditarLibro.getContentPane().add(lblNumPaginas);
 		
 		textFieldNumPaginas = new JTextField();
 		textFieldNumPaginas.setColumns(10);
-		textFieldNumPaginas.setBounds(541, 243, 200, 27);
+		textFieldNumPaginas.setBounds(128, 403, 200, 27);
 		frmEditarLibro.getContentPane().add(textFieldNumPaginas);
 		
 		lblImagenTitulo = new JLabel("Imagen");
 		lblImagenTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagenTitulo.setBounds(53, 431, 82, 14);
+		lblImagenTitulo.setBounds(36, 445, 82, 14);
 		frmEditarLibro.getContentPane().add(lblImagenTitulo);
 		
 		textFieldImagen = new JTextField();
 		textFieldImagen.setColumns(10);
-		textFieldImagen.setBounds(164, 360, 128, 156);
+		textFieldImagen.setBounds(128, 440, 200, 27);
 		frmEditarLibro.getContentPane().add(textFieldImagen);
 		
 		textFieldId = new JTextField();
@@ -149,7 +149,7 @@ public class Editar extends JFrame {
 		
 		lblImagen = new JLabel("Imagen");
 		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagen.setBounds(315, 357, 110, 131);
+		lblImagen.setBounds(430, 191, 171, 243);
 		frmEditarLibro.getContentPane().add(lblImagen);
 		
 		

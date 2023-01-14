@@ -31,6 +31,7 @@ public class Modelo {
 	private String bdName;
 	private String collection;
 	private ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+	@SuppressWarnings("unused")
 	private String usuarioLog;
 	private Boolean userLogged = false;
 
@@ -41,67 +42,112 @@ public class Modelo {
 	MongoCursor<Document> cursor;
 
 	// GETTERS & SETTERS
+	/**
+	 * @return Booleano con el estado de logueo del usuario
+	 */
 	public Boolean getUserLogged() {
 		return userLogged;
 	}
 
+	/**
+	 * @return String con el nombre de usuario
+	 */
 	public String getUsuario() {
 		return usuario;
 	}
 
+	/**
+	 * @return String con la contrasenya
+	 */
 	public String getPassword() {
 		return password;
 	}
 
+	/**
+	 * Recibe un String y modifica el nombre de usuario
+	 * @param usuario
+	 */
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
 
+	/**
+	 * Recibeun String y modifica la contrasenya
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+	/**
+	 * @return String con la IP de conecion a la BD
+	 */
 	public String getIp() {
 		return ip;
 	}
 
+	/**
+	 * @return String con el puerto de conexion.
+	 */
 	public int getPort() {
 		return port;
 	}
 
+	/**
+	 * @return String con el nombre de la base de datos.
+	 */
 	public String getBdName() {
 		return bdName;
 	}
 
+	/**
+	 * @return String con el nombre de la coleccion en la BD.
+	 */
 	public String getCollection() {
 		return collection;
 	}
 
+	/**
+	 * Recibe un String y modifica la IP de conexion
+	 * @param ip
+	 */
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
 
+	/**
+	 * Recibe un String y modifica el puerto de conexion
+	 * @param port
+	 */
 	public void setPort(int port) {
 		this.port = port;
 	}
 
+	/**
+	 * Recibe un String y modifica el nombre de la BD
+	 * @param bdName
+	 */
 	public void setBdName(String bdName) {
 		this.bdName = bdName;
 	}
 
+	/**
+	 * Recibe un String y modifica el nombre de la coleccion
+	 * @param collection
+	 */
 	public void setCollection(String collection) {
 		this.collection = collection;
 	}
 
-	// CARGAR FICHERO JSON
-	public String cargaJson(File ficheroJSON) {
-		return null;
-	}
 
-	// EXTRAER DATOS DE FICHERO JSON
-	// recibe un fichero json y extrae los datos para asignarlos a las variables de
-	// conexion
-	// modificando el json deveriamos poder conectar con AWS
+
+	
+	
+	/**EXTRAER DATOS DE FICHERO JSON
+	 * No recibe ni retorna parametros, carga un fichero JSON con los datos de conexion, los gestiona y
+	 * asigna a los Setters de los parametros de la clase.
+	 * Los parametros son IP, Puerto de conexion, nombre de BD y nombre de coleccion
+	 */
 	public void DatosConexion() {
 		String datosJson = "";
 		try {
@@ -127,64 +173,60 @@ public class Modelo {
 		setCollection(jsonCon.getString("collectionname"));
 	}
 
-	// CONECTAR CON DB
-	// metodo que conecta con mongo y muestra listado de bases de datos en
-	// "servidor"
-	// devuelve una lista con las bd
-	// en un futuro, pasar ip y puerto por parametros, a partir de doc.json para
-	// conexion a server AWS
-	public ArrayList<String> conectaMongo() {
+	
+
+	/**CONECTAR CON MONGODB
+	 * Recibe String con usuario y password, llama al metodo DatosConexion() que carga los datos de conexion desde un fichero JSON.
+	 * Inicia la conexion con MongoDB para acceder a la coleccion de usuarios y validar el usuario y password mediante el metodo ValidaUsuaio(),
+	 * si ValidaUsuario() es true, mestra un popup con un mensaje de confirmacion y continua cargando colecciones y resto de conexion.
+	 * En caso de false, muestra una alerta y cierra la conexion.
+	 * @param String userName con el nombre de usuario
+	 * @param String password con la contrsenya de usuario
+	 * @return booleano con el resultado
+	 */
+	public boolean conectaMongo(String userName, String password) {
 		ArrayList<String> results = new ArrayList<String>();
 		DatosConexion();
 		// conectamos con mongo(en futuro, pasar como parametros ip y puerto)
 		mongoClient = new MongoClient(getIp(), getPort());
 		database = mongoClient.getDatabase(getBdName());
 		collectionUsers = database.getCollection("users");
-		if (validaUsuario()) {
+		if (validaUsuario(userName, password)) {
+			userLogged = true;
+			JOptionPane.showMessageDialog(new JFrame(), "LOGIN CORRECTO", "INFO", JOptionPane.INFORMATION_MESSAGE);
 			collectionBooks = database.getCollection(getCollection());
 			MongoCursor<Document> cursor;
-			// List<String> dbList = mongoClient.getDatabaseNames();
-			// getDatabaseNames esta deprecado, usar este
-			cursor = collectionBooks.find().iterator();
-			// controlamos que el id exista
-			if (!cursor.hasNext()) {
-				System.err.println("El id no existe");
-			}
-			while (cursor.hasNext()) {
-				JSONObject obj = new JSONObject(cursor.next().toJson());
-				Integer id2 = obj.getInt("Id");
-				Integer anyoNacimiento = obj.getInt("Anyo_nacimiento");
-				Integer anyoPublicacion = obj.getInt("Anyo_publicacion");
-				Integer numPaginas = obj.getInt("Numero_paginas");
-				results.add("ID: " + id2.toString() + "\n - TITULO: " + obj.getString("Titulo") + " \n- AUTOR: "
-						+ obj.getString("Autor"));
-			}
+			return true;
 		} else {
 			JOptionPane.showMessageDialog(null, "Credenciales erroneas", "Alerta", JOptionPane.WARNING_MESSAGE);
 			mongoClient.close();
+			return false;
 		}
-		userLogged = true;
-
-		return results;
 	}
 
 	// comprueba que los datos introducidos corresponden con los almacenados en BD
-	public boolean validaUsuario() {
+	/**VALIDA USUARIO
+	 * Recibe Strings con usuario y password, setea el nombre de usuario en la clase, encripta el password recibido por parametro
+	 * para comprobarlo con el de la bd.
+	 * Accede a la coleccion de usuarios y crea un objeto Usuario con cada uno de ellos y lo anyade a la Lista de usuarios.
+	 * Comprueba que el usuario recibido por parametro y el password encriptado coinciden con algun usuario de la  lista.
+	 * retorna booleano con el resultado
+	 * @param String userName
+	 * @param String password
+	 * @return boolenao con el resultado
+	 */
+	public boolean validaUsuario(String userName, String password) {
 
-		String usuario = JOptionPane.showInputDialog("Introduzca nombre de usuario:");
-		setUsuario(usuario);
-
-		String password = JOptionPane.showInputDialog("Introduzca contrasenya:");
-
+		setUsuario(userName);
 		String passEncrypt = encriptarContrasenya(password);
 		Usuario user = null;
 
 		cursor = collectionUsers.find().iterator();
 		while (cursor.hasNext()) {
 			JSONObject obj = new JSONObject(cursor.next().toJson());
-			String userName = obj.getString("user");
+			String user2 = obj.getString("user");
 			String passw = obj.getString("pass");
-			user = new Usuario(userName, passw);
+			user = new Usuario(user2, passw);
 		}
 
 		usuarios.add(user);
@@ -210,6 +252,11 @@ public class Modelo {
 	}
 
 	// encripta la contrasenya en sha-256
+	/**ENCRIPTAR CONTRASENYA
+	 * Metodo que encripta la contrsenya recibida por parametro con el Hash SHA-256
+	 * @param String con la contrsenya en claro
+	 * @return String con la contrsenya encriptada
+	 */
 	public String encriptarContrasenya(String contrasenya) {
 		String passwordToHash = contrasenya;
 		String generatedPassword = null;
@@ -238,13 +285,72 @@ public class Modelo {
 		return generatedPassword;
 	}
 
+	/**DESCONECTAR MONGODB
+	 * Metodo que cierra la conecion con MongoDB.
+	 * Retorna un String con el resultado de la operacion
+	 * @return String con mensaje al usuario informando del resultado
+	 */
+	public String desconectaMongo() {
+		if (mongoClient != null) {
+			String response = "CONEXION CERRADA";
+			mongoClient.close();
+			return response;
+		}
+		return "DEBE CONECTARSE PRIMERO";
+
+	}
+
+	/**MOSTRA BD
+	 * Retorna un ArrayList de Libro con los elementos de la BD.
+	 * Accede a la BD y consult todos los elementos de la coleccion, crea un objeto libro por cada uno
+	 * de ellos y lo anyade a una Lista, la cual retorna.
+	 * @return ArrayList con los libros de la coleccion.
+	 */
+	public ArrayList<Libro> mostrarBD() {
+		ArrayList<Libro> biblioteca = new ArrayList<Libro>();
+		Integer id2 = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+		String titulo = null, autor = null, editorial = null, imagen = null;
+		cursor = collectionBooks.find().iterator();
+		// controlamos que el id exista
+		if (!cursor.hasNext()) {
+			System.err.println("El id no existe");
+		}
+		while (cursor.hasNext()) {
+			// System.out.println(cursor.next().toJson());
+			JSONObject obj = new JSONObject(cursor.next().toJson());
+			id2 = obj.getInt("Id");
+			titulo = obj.getString("Titulo");
+			autor = obj.getString("Autor");
+			anyoNacimiento = obj.getInt("Anyo_nacimiento");
+			anyoPublicacion = obj.getInt("Anyo_publicacion");
+			editorial = obj.getString("Editorial");
+			numPaginas = obj.getInt("Numero_paginas");
+			imagen = obj.getString("Thumbnail");
+			Libro libro = new Libro(id2, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+			biblioteca.add(libro);
+		}
+
+		return biblioteca;
+
+	}
+
+	/**ELEMENTOS EN BD
+	 * Muestra la cantidad de elementos en la coleccion	
+	 * @return String con el resultado
+	 */
 	public String ElementosBD() {
 		Integer elementosBD = (int) collectionBooks.count();
 		String elementos = elementosBD.toString();
 		return ("Cantidad de elementos en coleccion: " + elementos);
 	}
 
-	// anyade un libro a la coleccion, le pasamos un objeto libro y lo anyade.
+	// 
+	/**
+	 *Anyade un libro a la coleccion, recibe un objeto Libro, lo gestiona y anyade a labase de datos
+	 *Retorna un String con la confirmacion
+	 * @param libro
+	 * @return String
+	 */
 	public String AnyadeLibro(Libro libro) {
 		int id = (int) (collectionBooks.count() + 1);
 		Document doc = new Document();
@@ -262,6 +368,11 @@ public class Modelo {
 		return response;
 	}
 
+	/**
+	 * Recibe como parametro un Int con el id del libro a mostrar, lo busca en la base de datos y crea un objeto Libro con el resultado, el cual retorna.
+	 * @param int id
+	 * @return Libro libro
+	 */
 	public Libro CargarLibro(int id) {
 		Integer id2 = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
 		String titulo = null, autor = null, editorial = null, imagen = null;
@@ -284,20 +395,20 @@ public class Modelo {
 			editorial = obj.getString("Editorial");
 			numPaginas = obj.getInt("Numero_paginas");
 			imagen = obj.getString("Thumbnail");
-			/*
-			 * System.out.println("ID: " + id2.toString() + " - TITULO: " +
-			 * obj.getString("Titulo") + " - AUTOR: " + obj.getString("Autor") +
-			 * " - ANYO DE NACIMIENTO: " + anyoNacimiento.toString() +
-			 * " - ANYO DE PUBLICACION: " + anyoPublicacion.toString() + " - EDITORAL: " +
-			 * obj.getString("Editorial") + " - NUMERO DE PAGINAS: " +
-			 * numPaginas.toString());
-			 */
 		}
 
 		Libro libro = new Libro(id2, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
 		return libro;
 	}
 
+	/**EDITAR LIBRO
+	 * Recibe un objeto Libro como parametro y devuelve un String con el resultado de la operacion.
+	 * Primero solicita confirmacion del usuario, en caso afirmativo, crea la consulta y busca el libro en la BD.
+	 * Compara los campos del libro de la BD con los campos del objeto Libro recibido por parametro y en caso de no ser iguales,
+	 * modifica el parametro en la base de datos.
+	 * @param libro
+	 * @return String con el resultado
+	 */
 	public String EditarLibro(Libro libro) {
 		int input = JOptionPane.showConfirmDialog(null, "¿Desear editar el libro?", "Atención",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -365,27 +476,100 @@ public class Modelo {
 		return "";
 	}
 
-	// recibe el campo y el valor a buscar, devuelve el libro
-	public String BuscarLibro(String campo, String valor) {
+	
+	/**
+	 * Recibe dos Strings con el campo de busqueda y el valor a buscar, devuelve un objeto Libro con el libro buscado
+	 * @param String campo con el campo de busqueda
+	 * @param String valor con el valor a buscar
+	 * @return Libro con el libro buscado
+	 */
+	public Libro BuscarLibro(String campo, String valor) {
 
 		String response = null;
 		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
 		String titulo = null, autor = null, editorial = null, imagen = null;
-		
 
 		Bson query = null;
 		if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
-				int valor2 = Integer.parseInt(valor);
-				query = eq(campo, valor2);
-			} else {
-				query = eq(campo, valor);
-			}
+			int valor2 = Integer.parseInt(valor);
+			query = eq(campo, valor2);
+		} else {
+			query = eq(campo, valor);
+		}
 
 		cursor = collectionBooks.find(query).iterator();
 		// controlamos que el id exista
 		if (!cursor.hasNext()) {
 			response = "DATOS NO ENCONTRADOS";
-			return response;
+			JOptionPane.showMessageDialog(new JFrame(), response, "ERROR", JOptionPane.WARNING_MESSAGE);
+			return null;
+		}
+
+		// almacenamos el libro en JSON para acceder a los campos
+		JSONObject obj = new JSONObject();
+		while (cursor.hasNext()) {
+			obj = new JSONObject(cursor.next().toJson());
+			id = obj.getInt("Id");
+			titulo = obj.getString("Titulo");
+			autor = obj.getString("Autor");
+			anyoNacimiento = obj.getInt("Anyo_nacimiento");
+			anyoPublicacion = obj.getInt("Anyo_publicacion");
+			editorial = obj.getString("Editorial");
+			numPaginas = obj.getInt("Numero_paginas");
+			imagen = obj.getString("Thumbnail");
+
+		}
+		Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
+
+		return libro;
+	}
+
+	
+	/**
+	 * Recibe tres Strings con el campo de busqueda, el valor a buscar y el filtro de busqueda,
+	 * siendo "eq" para coincidencia exacta, "gte" para busquedas mayor que el valor y "lte" para busquedas menor que el valor.  
+	 * Devuelve ArrayList de Libro con una lista de libros coincidintes.
+	 * @param String campo con el campo de busqueda
+	 * @param String valor con el valor a buscar 
+	 * @param String parametroBusqueda con el filtro de busqueda
+	 * @return ArrttayList de Libro con los libros
+	 */
+	public ArrayList<Libro> BuscarLibroCriterio(String campo, String valor, String parametroBusqueda) {
+
+		ArrayList<Libro> response = new ArrayList<Libro>();
+		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
+		String titulo = null, autor = null, editorial = null, imagen = null;
+		Bson query = null;
+		if (parametroBusqueda.equals("eq")) {
+			if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+				int valor2 = Integer.parseInt(valor);
+				query = eq(campo, valor2);
+			} else {
+				query = eq(campo, valor);
+			}
+		}
+
+		if (parametroBusqueda.equals("gte")) {
+			if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+				int valor2 = Integer.parseInt(valor);
+				query = gte(campo, valor2);
+			} else {
+				query = gte(campo, valor);
+			}
+		}
+		if (parametroBusqueda.equals("lte")) {
+			if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
+				int valor2 = Integer.parseInt(valor);
+				query = lte(campo, valor2);
+			} else {
+				query = lte(campo, valor);
+			}
+		}
+
+		cursor = collectionBooks.find(query).iterator();
+		
+		if (!cursor.hasNext()) {			
+			return null;
 		}
 
 		// almacenamos el libro en JSON para acceder a los campos
@@ -401,81 +585,23 @@ public class Modelo {
 			numPaginas = obj.getInt("Numero_paginas");
 			imagen = "";
 			Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
-			response = libro.toString();
+			response.add(libro);
 		}
 		System.out.println(obj.toString());
 
-		
-		
 		return response;
 	}
-	
-	
-	// recibe el campo y el valor a buscar, devuelve el libro
-		public ArrayList<Libro> BuscarLibroCriterio(String campo, String valor, String parametroBusqueda) {
 
-			ArrayList<Libro> response = new ArrayList<Libro>();
-			Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
-			String titulo = null, autor = null, editorial = null, imagen = null;
-			Bson query = null;
-			if(parametroBusqueda.equals("eq")) {			
-				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
-					int valor2 = Integer.parseInt(valor);
-					query = eq(campo, valor2);
-				} else {
-					query = eq(campo, valor);
-				}
-			}
-			
-			if(parametroBusqueda.equals("gte")) {			
-				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
-					int valor2 = Integer.parseInt(valor);
-					query = gte(campo, valor2);
-				} else {
-					query = gte(campo, valor);
-				}
-			}
-			if(parametroBusqueda.equals("lte")) {			
-				if (campo == "Id" || campo == "Anyo_nacimiento" || campo == "Anyo_publicacion" || campo == "Num_paginas") {
-					int valor2 = Integer.parseInt(valor);
-					query = lte(campo, valor2);
-				} else {
-					query = lte(campo, valor);
-				}
-			}
-			
-
-			cursor = collectionBooks.find(query).iterator();
-			// controlamos que el id exista
-			if (!cursor.hasNext()) {
-				//response.add("DATOS NO ENCONTRADOS");
-				return null;
-			}
-
-			// almacenamos el libro en JSON para acceder a los campos
-			JSONObject obj = new JSONObject();
-			while (cursor.hasNext()) {
-				obj = new JSONObject(cursor.next().toJson());
-				id = obj.getInt("Id");
-				titulo = obj.getString("Titulo");
-				autor = obj.getString("Autor");
-				anyoNacimiento = obj.getInt("Anyo_nacimiento");
-				anyoPublicacion = obj.getInt("Anyo_publicacion");
-				editorial = obj.getString("Editorial");
-				numPaginas = obj.getInt("Numero_paginas");
-				imagen = "";
-				Libro libro = new Libro(id, titulo, autor, anyoNacimiento, anyoPublicacion, editorial, numPaginas, imagen);
-				response.add(libro);
-			}
-			System.out.println(obj.toString());
-
-			
-			
-			return response;
-		}
-	
-
+	/**
+	 * Recibe String con el campo de busqueda y el valor del campo, busca el libro y lo convierte a JSON
+	 * seguidamente, borra el libro de la base de datos.
+	 * Retorna un booleano con el resultado
+	 * @param campo, String con el campo a buscar
+	 * @param valor, String con el valor del campo
+	 * @return boolean con resultado
+	 */
 	public boolean BorrarLibro(String campo, String valor) {
+		
 		String response = "";
 		Integer id = null, anyoNacimiento = null, anyoPublicacion = null, numPaginas = null;
 		String titulo = null, autor = null, editorial = null, imagen = null;
@@ -488,9 +614,11 @@ public class Modelo {
 			query = eq(campo, valor);
 		}
 		cursor = collectionBooks.find(query).iterator();
-		// controlamos que el id exista
+		
 		if (!cursor.hasNext()) {
 			System.err.println("El id no existe");
+			JOptionPane.showMessageDialog(new JFrame(), "EL ID NO EXISTE", "ERROR",
+					JOptionPane.WARNING_MESSAGE);
 		}
 		JSONObject obj = new JSONObject();
 		while (cursor.hasNext()) {

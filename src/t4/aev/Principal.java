@@ -42,7 +42,8 @@ public class Principal {
 		Anyadir anyadir = new Anyadir();
 		Editar editar = new Editar();
 		Buscar buscar = new Buscar();
-		Controlador controlador = new Controlador(modelo, vista, anyadir, editar, buscar);
+		PanelLogin panelLogin = new PanelLogin();
+		Controlador controlador = new Controlador(modelo, vista, anyadir, editar, buscar, panelLogin);
 
 
 	}

@@ -103,4 +103,14 @@ public class Libro {
 				+ anyNacimiento + ", anyoPublicacion=" + anyoPublicacion + ", numPaginas=" + numPaginas + ", imagen= " + imagen + "]";
 	}	
 	
+	/**
+	 * Devuelve un String con los campos del objeto libro, SIN el campo imagen en String base 64, 
+	 * para poder mostrarlo correctamente en la UI
+	 * @return
+	 */
+	public String toTextArea() {
+		return "Libro " + id + " [Titulo = " + titulo + ", Autor = " + autor + ", Editorial = " + editorial + ", Anyo de Nacimiento = "
+				+ anyNacimiento + ", Anyo de Publicacion = " + anyoPublicacion + ", Numero de Paginas = " + numPaginas + " ]";
+	}
+	
 }

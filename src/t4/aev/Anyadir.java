@@ -20,7 +20,7 @@ public class Anyadir {
 	private JTextField textFieldAnyoNac;
 	private JTextField textFieldAnyoPub;
 	private JTextField textFieldNumPaginas;
-	private JLabel lblImagen;
+	private JLabel lblImagenTitulo, lblImagen;
 	private JTextField textFieldImagen;
 
 	public Anyadir() {
@@ -41,11 +41,11 @@ public class Anyadir {
 		scrollPane_Original.setViewportView(editorPane);
 		
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(645, 445, 120, 27);
+		btnGuardar.setBounds(631, 570, 120, 27);
 		frame.getContentPane().add(btnGuardar);
 		
 		btnCerrar = new JButton("Cerrar");
-		btnCerrar.setBounds(515, 445, 120, 27);
+		btnCerrar.setBounds(501, 570, 120, 27);
 		frame.getContentPane().add(btnCerrar);
 		
 		JLabel lblTitulo = new JLabel("Titulo");
@@ -54,7 +54,7 @@ public class Anyadir {
 		frame.getContentPane().add(lblTitulo);
 		
 		btnImagen = new JButton("SELECCIONAR IMAGEN");
-		btnImagen.setBounds(276, 585, 145, 27);
+		btnImagen.setBounds(359, 459, 145, 27);
 		frame.getContentPane().add(btnImagen);
 		
 		textFieldTitulo = new JTextField();
@@ -74,12 +74,12 @@ public class Anyadir {
 		
 		textFieldEditorial = new JTextField();
 		textFieldEditorial.setColumns(10);
-		textFieldEditorial.setBounds(523, 301, 200, 27);
+		textFieldEditorial.setBounds(102, 453, 200, 27);
 		frame.getContentPane().add(textFieldEditorial);
 		
 		JLabel lblEditorial = new JLabel("Editorial");
 		lblEditorial.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEditorial.setBounds(431, 307, 82, 14);
+		lblEditorial.setBounds(10, 459, 82, 14);
 		frame.getContentPane().add(lblEditorial);
 		
 		JLabel lblAnyoNac = new JLabel("Anyo Nacimineto");
@@ -104,23 +104,28 @@ public class Anyadir {
 		
 		JLabel lblNumPaginas = new JLabel("Num. Paginas");
 		lblNumPaginas.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNumPaginas.setBounds(431, 345, 82, 14);
+		lblNumPaginas.setBounds(10, 497, 82, 14);
 		frame.getContentPane().add(lblNumPaginas);
 		
 		textFieldNumPaginas = new JTextField();
 		textFieldNumPaginas.setColumns(10);
-		textFieldNumPaginas.setBounds(523, 339, 200, 27);
+		textFieldNumPaginas.setBounds(102, 491, 200, 27);
 		frame.getContentPane().add(textFieldNumPaginas);
 		
-		lblImagen = new JLabel("Imagen");
-		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagen.setBounds(27, 527, 82, 14);
-		frame.getContentPane().add(lblImagen);
+		lblImagenTitulo = new JLabel("Imagen");
+		lblImagenTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImagenTitulo.setBounds(392, 426, 82, 14);
+		frame.getContentPane().add(lblImagenTitulo);
 		
 		textFieldImagen = new JTextField();
 		textFieldImagen.setColumns(10);
-		textFieldImagen.setBounds(138, 456, 128, 156);
+		textFieldImagen.setBounds(102, 553, 128, 36);
 		frame.getContentPane().add(textFieldImagen);
+		
+		lblImagen = new JLabel("Imagen");
+		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
+		lblImagen.setBounds(525, 307, 200, 252);
+		frame.getContentPane().add(lblImagen);
 		
 		
 		
@@ -196,5 +201,8 @@ public class Anyadir {
 		this.editorPane = editorPane;
 	}
 
-	
+	public JLabel getLblImagen() {
+		return lblImagen;
+	}
+
 }

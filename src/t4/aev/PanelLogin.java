@@ -17,10 +17,10 @@ public class PanelLogin extends JFrame {
 	private JFrame frame;
 	private JPanel contentPane;
 	private JPasswordField passwordField;
-	private JTextField textPassword;
 	private JTextField textUser;
 	private JButton btnAceptar, btnCancelar;
 	private JLabel luser, lpassword;
+	
 
 	public PanelLogin() {
 		initialize();
@@ -30,7 +30,7 @@ public class PanelLogin extends JFrame {
 		frame = new JFrame();
 		frame.setTitle("Login");
 		
-		frame.setSize(340, 300);
+		frame.setSize(330, 252);
 		frame.getContentPane().setLayout(null);
 		frame.setBounds(500, 350, 330, 300);
 		
@@ -42,29 +42,25 @@ public class PanelLogin extends JFrame {
 		frame.getContentPane().add(luser);
 		
 		lpassword = new JLabel("Contrasenya");
-		lpassword.setBounds(22, 111, 80, 30);
-		passwordField.setBounds(102, 111, 193, 30);
-		frame.getContentPane().add(passwordField);
+		lpassword.setBounds(22, 111, 80, 30);		
 		frame.getContentPane().add(lpassword);
 		
-		
-		textPassword = new JTextField();
-		textPassword.setBounds(97, 111, 207, 30);
-		frame.getContentPane().add(textPassword);
-		textPassword.setColumns(10);
-		
 		btnAceptar = new JButton("ACEPTAR");
-		btnAceptar.setBounds(64, 181, 89, 23);
+		btnAceptar.setBounds(62, 167, 89, 23);
 		frame.getContentPane().add(btnAceptar);
 		
 		btnCancelar = new JButton("CANCELAR");
-		btnCancelar.setBounds(163, 181, 89, 23);
+		btnCancelar.setBounds(161, 167, 89, 23);
 		frame.getContentPane().add(btnCancelar);
 		
 		JLabel lblNewLabel = new JLabel("Inicie sesion para acceder a la base de datos.");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(22, 23, 228, 14);
+		lblNewLabel.setBounds(22, 23, 282, 14);
 		frame.getContentPane().add(lblNewLabel);
+		
+		passwordField = new JPasswordField();
+		passwordField.setBounds(97, 111, 207, 30);
+		frame.getContentPane().add(passwordField);
 	}
 	
 	public void setVisible(boolean b) {
@@ -76,10 +72,6 @@ public class PanelLogin extends JFrame {
 	public JTextField getTextUser() {
 		return textUser;
 	}
-	
-	public JTextField getTextPassword() {
-		return textPassword;
-	}
 
 	public JButton getBtnAceptar() {
 		return btnAceptar;
@@ -88,7 +80,8 @@ public class PanelLogin extends JFrame {
 	public JButton getBtnCancelar() {
 		return btnCancelar;
 	}
-	
-	
-	
+
+	public JPasswordField getPasswordField() {
+		return passwordField;
+	}
 }

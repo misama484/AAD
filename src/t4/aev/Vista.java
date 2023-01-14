@@ -19,94 +19,73 @@ import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class Vista extends JFrame {
 
-	private JFrame frame;
-	private JTextField textFieldRuatXml;
-	private JTextField textFieldSql;
-
-	private JButton btnCargaJSON;
+	private JFrame frmAevTAad;
 	private JButton btnConectar;
 	private JButton btnDesconectar;
-	private JButton btnSql;
+	private JButton btnMostrarBD;
 	private JButton btnBorrarLibro;
 
 	private JLabel lblTitulo;
-	private JLabel lblSql;
 	private JLabel lblEstado;
 	private JButton btnAnyadirLibro;
 	private JScrollPane scrollPane;
 	private JTextArea textAreaPrincipal;
 	private JButton btnEditarLibro;
-	private JTextField textFieldTabla;
-	private JLabel lblNombreDeTabla;
 	private JScrollPane scrollPane_1;
 	private JTextArea textAreaTablas;
 	private JButton btnBuscarLibro;
 
 	public Vista() {
-		initialize();
+		Initialize();
 	}
 
-	private void initialize() {
+	private void Initialize() {
 
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 1220, 820);
-		frame.getContentPane().setLayout(null);
-
-		textFieldRuatXml = new JTextField();
-		textFieldRuatXml.setBounds(21, 60, 980, 26);
-		frame.getContentPane().add(textFieldRuatXml);
-		textFieldRuatXml.setColumns(10);
-
-		btnCargaJSON = new JButton("CARGAR JSON");
-		btnCargaJSON.setBounds(1038, 62, 138, 23);
-		frame.getContentPane().add(btnCargaJSON);
+		frmAevTAad = new JFrame();
+		frmAevTAad.setTitle("AEV3 T4 AAD");
+		frmAevTAad.setResizable(false);
+		frmAevTAad.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAevTAad.setBounds(100, 100, 1220, 820);
+		frmAevTAad.getContentPane().setLayout(null);
 
 		btnConectar = new JButton("CONECTAR");
 		btnConectar.setBounds(1038, 108, 138, 59);
 		btnConectar.setBackground(new Color(153, 255, 204));
-		frame.getContentPane().add(btnConectar);
+		frmAevTAad.getContentPane().add(btnConectar);
 
 		btnDesconectar = new JButton("DESCONECTAR");
 		btnDesconectar.setBounds(1038, 187, 138, 59);
 		btnDesconectar.setBackground(new Color(255, 153, 153));
-		frame.getContentPane().add(btnDesconectar);
+		frmAevTAad.getContentPane().add(btnDesconectar);
 
-		textFieldSql = new JTextField();
-		textFieldSql.setBounds(21, 703, 980, 26);
-		textFieldSql.setColumns(10);
-		frame.getContentPane().add(textFieldSql);
-
-		btnSql = new JButton("ENVIAR CONSULTA");
-		btnSql.setBounds(1038, 705, 138, 23);
-		frame.getContentPane().add(btnSql);
+		btnMostrarBD = new JButton("MOSTRAR LIBROS");
+		btnMostrarBD.setBounds(1038, 705, 138, 23);
+		frmAevTAad.getContentPane().add(btnMostrarBD);
 
 		lblEstado = new JLabel("CONECTADO CON BD LIBROS EN 127.0.0.0 USUARIO: XXXX");
-		lblEstado.setBounds(21, 760, 980, 14);
-		frame.getContentPane().add(lblEstado);
-
-		lblSql = new JLabel("Introduzca la consulta Sql que desea enviar");
-		lblSql.setBounds(21, 678, 980, 14);
-		frame.getContentPane().add(lblSql);
+		lblEstado.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lblEstado.setBounds(21, 747, 980, 23);
+		frmAevTAad.getContentPane().add(lblEstado);
 
 		lblTitulo = new JLabel("AEV3 T4 AAD Gestion de Biblioteca - MongoDB");
-		lblTitulo.setBounds(0, 11, 1204, 25);
-		lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblTitulo.setBounds(0, 11, 1204, 38);
+		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 18));
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblTitulo);
+		frmAevTAad.getContentPane().add(lblTitulo);
 
 		btnAnyadirLibro = new JButton("LIBRO NUEVO");
 		btnAnyadirLibro.setBounds(1038, 674, 138, 23);
 		btnAnyadirLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(btnAnyadirLibro);
+		frmAevTAad.getContentPane().add(btnAnyadirLibro);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(21, 98, 980, 569);
-		frame.getContentPane().add(scrollPane);
+		scrollPane.setBounds(21, 76, 980, 621);
+		frmAevTAad.getContentPane().add(scrollPane);
 
 		textAreaPrincipal = new JTextArea();
 		textAreaPrincipal.setLineWrap(true);
@@ -116,21 +95,11 @@ public class Vista extends JFrame {
 		btnEditarLibro = new JButton("EDITAR LIBRO");
 		btnEditarLibro.setBounds(1038, 640, 138, 23);
 		btnEditarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		frame.getContentPane().add(btnEditarLibro);
-
-		textFieldTabla = new JTextField();
-		textFieldTabla.setBounds(1038, 464, 138, 26);
-		textFieldTabla.setColumns(10);
-		frame.getContentPane().add(textFieldTabla);
-
-		lblNombreDeTabla = new JLabel("Nombre de tabla");
-		lblNombreDeTabla.setBounds(1038, 451, 138, 14);
-		lblNombreDeTabla.setHorizontalAlignment(SwingConstants.CENTER);
-		frame.getContentPane().add(lblNombreDeTabla);
+		frmAevTAad.getContentPane().add(btnEditarLibro);
 
 		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(1038, 257, 138, 183);
-		frame.getContentPane().add(scrollPane_1);
+		scrollPane_1.setBounds(1038, 278, 138, 73);
+		frmAevTAad.getContentPane().add(scrollPane_1);
 
 		textAreaTablas = new JTextArea();
 		textAreaTablas.setLineWrap(true);
@@ -139,21 +108,18 @@ public class Vista extends JFrame {
 		btnBuscarLibro = new JButton("BUSCAR LIBRO");
 		btnBuscarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnBuscarLibro.setBounds(1038, 605, 138, 23);
-		frame.getContentPane().add(btnBuscarLibro);
+		frmAevTAad.getContentPane().add(btnBuscarLibro);
 		
 		btnBorrarLibro = new JButton("BORRAR LIBRO");
 		btnBorrarLibro.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnBorrarLibro.setBounds(1038, 571, 138, 23);
-		frame.getContentPane().add(btnBorrarLibro);
+		frmAevTAad.getContentPane().add(btnBorrarLibro);
 
-		this.frame.setVisible(true);
+		this.frmAevTAad.setVisible(true);
 	}
 
 	// GETTERS
 
-	public JTextField getTextFieldRuatXml() {
-		return textFieldRuatXml;
-	}
 
 	public JTextArea getTextAreaPrincipal() {
 		return textAreaPrincipal;
@@ -163,20 +129,8 @@ public class Vista extends JFrame {
 		return textAreaTablas;
 	}
 
-	public JTextField getTextFieldSql() {
-		return textFieldSql;
-	}
-
-	public JTextField getTextFieldTabla() {
-		return textFieldTabla;
-	}
-
 	public JButton getBtnEditarLibro() {
 		return btnEditarLibro;
-	}
-
-	public JButton getBtnCargaJson() {
-		return btnCargaJSON;
 	}
 
 	public JButton getBtnConectar() {
@@ -187,8 +141,8 @@ public class Vista extends JFrame {
 		return btnDesconectar;
 	}
 
-	public JButton getBtnSql() {
-		return btnSql;
+	public JButton getBtnMostrarBD() {
+		return btnMostrarBD;
 	}
 
 	public JButton getBtnAnyadirLibro() {
@@ -197,10 +151,6 @@ public class Vista extends JFrame {
 
 	public JLabel getLblTitulo() {
 		return lblTitulo;
-	}
-
-	public JLabel getLblSql() {
-		return lblSql;
 	}
 
 	public JLabel getLblEstado() {
