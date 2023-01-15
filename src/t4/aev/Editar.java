@@ -149,7 +149,7 @@ public class Editar extends JFrame {
 		
 		lblImagen = new JLabel("Imagen");
 		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagen.setBounds(430, 191, 171, 243);
+		lblImagen.setBounds(430, 191, 170, 243);
 		frmEditarLibro.getContentPane().add(lblImagen);
 		
 		

@@ -124,7 +124,7 @@ public class Anyadir {
 		
 		lblImagen = new JLabel("Imagen");
 		lblImagen.setHorizontalAlignment(SwingConstants.CENTER);
-		lblImagen.setBounds(525, 307, 200, 252);
+		lblImagen.setBounds(525, 307, 170, 243);
 		frame.getContentPane().add(lblImagen);
 		
 		
