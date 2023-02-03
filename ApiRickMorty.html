@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick&Morty</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        function mostrarMensaje() {
+            alert("Boton pulsado");
+        }
+        function mostrarJson() {
+            var strBusqueda = document.getElementById('strBusqueda').value;
+            axios.get("https://rickandmortyapi.com/api/character/?name=" + strBusqueda)
+            .then( response => {
+                alert(response.data.results[0].toString());    
+            })
+            .catch(function (error) {
+                alert(error);
+            })
+        }
+        function mostrarDatos() {
+            var strBusqueda = document.getElementById('strBusqueda').value;
+            axios.get("https://rickandmortyapi.com/api/character/?name=" + strBusqueda)
+            .then( response => {
+                //alert("Nombre: " + response.data.results[0].name + "\nEspecie: " + response.data.results[0].species);
+                var idApi = response.data.results[0].id;
+                var nombre = response.data.results[0].name;
+                var estado = response.data.results[0].status;
+                var especie = response.data.results[0].species;
+                var genero = response.data.results[0].genre;
+                var origen = response.data.results[0].origin.name;
+                var localizacion = response.data.results[0].location.name;
+                var imagen = response.data.results[0].image;
+
+                document.getElementById('srtId').value = idApi;
+                document.getElementById('srtNombre').value = nombre;
+                document.getElementById('strEstado').value = estado;
+                document.getElementById('srtEspecie').value = especie;
+                document.getElementById('srtGenero').value = genero;
+                document.getElementById('srtOrigen').value = origen;
+                document.getElementById('srtLocalizacion').value = localizacion;
+                document.getElementById('srtImagen').value = imagen;
+                document.getElementById('imagen').src = imagen;
+                document.getElementById('imagen').style.display = "block";
+
+            })
+            .catch(error => {
+                alert(error);
+            })
+        }
+
+        function guardarDatos(){
+            var idApi = document.getElementById('srtId').value;
+            var nombre = document.getElementById('srtNombre').value;
+            var estado = document.getElementById('strEstado').value;
+            var especie = document.getElementById('strEstado').value;
+            var genero = document.getElementById('srtGenero').value;
+            var origen = document.getElementById('srtOrigen').value;
+            var localizacion = document.getElementById('srtLocalizacion').value;
+            var imagen = document.getElementById('srtImagen').value;
+
+            $ajax({
+                type: "POST",
+                url: "scriptPhp.php",
+                data: {idApi: idApi, nombre: nombre, estado: estado, especie: especie, genero: genero, origen: origen, localizacion: localizacion, imagen: imagen},
+                success: function (response) {
+                    alert(response);
+                },
+                error: function(){
+                    alert("Error");
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <h1>AAD T5 Ejercicios</h1>
+        <h2>Ejercicio 6</h2>
+        <p>Ahora toca procesar el JSON que te devuelve axios como “response”. Mira el ejemplo de la teoría e intenta acceder a cada uno de los campos que te interesen. Puedes mostrar cada campo en mensajes de alerta distintos</p>
+        <p>
+            <input type="text" value="Rick Sanchez" id="strBusqueda">
+            <button id="Boton" onclick=mostrarDatos()>Buscar</button>
+        </p>
+        <p>
+            <p>
+                <p>ID:</p>
+                <input type="text" value="" id="srtId">
+                <p>Nombre:</p>
+                <input type="text" value="" id="srtNombre">
+                <p>Estado:</p>
+                <input type="text" value="" id="strEstado">
+                <p>Especie:</p>
+                <input type="text" value="" id="srtEspecie">
+                <p>Genero:</p>
+                <input type="text" value="" id="srtGenero">
+                <p>Origen:</p>
+                <input type="text" value="" id="srtOrigen">
+                <p>Localizacion:</p>
+                <input type="text" value="" id="srtLocalizacion">
+                <p>Imagen:</p>
+                <img id="imagen" src="" alt="Imagen del personaje" style="display:none;">
+                <input type="text" value="" id="srtImagen">                
+            </p>
+            <p>
+                <button id="Boton" onclick=guardarDatos()>Guardar</button>
+            </p>
+
+        </p>
+</body>
+</html>
