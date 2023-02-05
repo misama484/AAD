@@ -1,0 +1,38 @@
+<?php
+// Recoger parámetros enviados como POST
+$nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
+$edad = $_POST['edad'];
+
+// Conexión a la base de datos
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "database_name";
+
+// Crear conexión
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if (!$conn) {
+    die("La conexión falló: " . mysqli_connect_error());
+}
+
+// Insertar datos en la tabla
+$sql = "INSERT INTO tabla_ejemplo (nombre, apellido, edad)
+VALUES ('$nombre', '$apellido', '$edad')";
+
+if (mysqli_query($conn, $sql)) {
+    echo "Los datos se guardaron correctamente";
+} else {
+    echo "Error al guardar los datos: " . mysqli_error($conn);
+}
+
+// Cerrar conexión
+mysqli_close($conn);
+?>
+Recuerda cambiar los valores de las variables de conexión a la base de datos con tus propios datos.
+
+
+
+

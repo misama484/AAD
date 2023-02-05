@@ -1,6 +1,8 @@
+
 <?php
 
-if(isset($_POST["valor"])){
+if(isset($_POST["personaje"])){
+    //Datos Post
     $idApi = $_POST["idApi"];
     $nombre = $_POST["nombre"];
     $estado = $_POST["estado"];
@@ -9,7 +11,9 @@ if(isset($_POST["valor"])){
     $localizacion = $_POST["localizacion"];
     $origen = $_POST["origen"];
     $urlImagen = $_POST["URLImagen"];
-    $servidor = "127.0.0.1";
+
+    //datosBD
+    $servidor = "localhost";
     $usuario = "root";
     $password = "";
     $dbname = "rickmorty";
@@ -19,14 +23,57 @@ if(isset($_POST["valor"])){
     if (!$conexion) {
         echo "Error en la conexion a MySQL: ".mysqli_connect_error();
     exit();
+    }
+
+
+    $sql = "INSERT INTO personajes (idApi, nombre, estado, especie, genero, localizacion, origen, URLImagen) VALUES ('".addslashes($idApi)."','".addslashes($nombre)."','".addslashes($estado)."','".addslashes($especie)."','".addslashes($genero)."','".addslashes($localizacion)."','".addslashes($origen)."','".addslashes($urlImagen)."')";
+
+    if (mysqli_query($conexion, $sql)) {
+        echo "Registro insertado correctamente.";
+    } else {
+        echo "Error: " . mysqli_error($conexion);
+    }
+}
+/*
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "rickmorty";
+
+// Crea la conexión a la base de datos
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Verifica la conexión
+if (!$conn) {
+    die("Conexión fallida: " . mysqli_connect_error());
 }
 
-$sql = "INSERT INTO personajes (idApi,nombre,estado,especie,genero,localizacion,origen,URLImagen) VALUES ('".$idApi."','".$nombre."','".$estado."','".$especie."','".$genero."','".$localizacion."','".$origen."','".$urlImagen."')";
+// Recoge los parámetros enviados como POST
+$idApi = $_POST['idApi'];
+$nombre = $_POST['nombre'];
+$estado = $_POST['estado'];
+$especie = $_POST['especie'];
+$genero = $_POST['genero'];
+$origen = $_POST['origen'];
+$localizacion = $_POST['localizacion'];
+$imagen = $_POST['imagen'];
 
-if (mysqli_query($conexion, $sql)) {
-    echo "Registro insertado correctamente.";
+// Prepara la consulta SQL
+$sql = "INSERT INTO personajes (idApi, nombre, estado, especie, genero, origen, localizacion, imagen)
+VALUES ('$idApi', '$nombre', '$estado', '$especie', '$genero', '$origen', '$localizacion', '$imagen')";
+
+// Ejecuta la consulta
+if (mysqli_query($conn, $sql)) {
+    echo "Datos guardados exitosamente";
 } else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conexion);
+    echo "Error al guardar los datos: " . mysqli_error($conn);
 }
 
+// Cierra la conexión a la base de datos
+mysqli_close($conn);
+
+ $sql = "INSERT INTO personajes (idApi, nombre, estado, especie, genero, localizacion, origen, URLImagen) VALUES ('".addslashes($idApi)."','".addslashes($nombre)."','".addslashes($estado)."','".addslashes($especie)."','".addslashes($genero)."','".addslashes($localizacion)."','".addslashes($origen)."','".addslashes($urlImagen)."')";
+
+
+*/
 ?>

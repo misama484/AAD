@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rick&Morty</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script type="text/javascript">
         function mostrarMensaje() {
             alert("Boton pulsado");
@@ -34,14 +35,14 @@
                 var localizacion = response.data.results[0].location.name;
                 var imagen = response.data.results[0].image;
 
-                document.getElementById('srtId').value = idApi;
-                document.getElementById('srtNombre').value = nombre;
+                document.getElementById('strId').value = idApi;
+                document.getElementById('strNombre').value = nombre;
                 document.getElementById('strEstado').value = estado;
-                document.getElementById('srtEspecie').value = especie;
-                document.getElementById('srtGenero').value = genero;
-                document.getElementById('srtOrigen').value = origen;
-                document.getElementById('srtLocalizacion').value = localizacion;
-                document.getElementById('srtImagen').value = imagen;
+                document.getElementById('strEspecie').value = especie;
+                document.getElementById('strGenero').value = genero;
+                document.getElementById('strOrigen').value = origen;
+                document.getElementById('strLocalizacion').value = localizacion;
+                document.getElementById('strImagen').value = imagen;
                 document.getElementById('imagen').src = imagen;
                 document.getElementById('imagen').style.display = "block";
 
@@ -52,16 +53,19 @@
         }
 
         function guardarDatos(){
-            var idApi = document.getElementById('srtId').value;
-            var nombre = document.getElementById('srtNombre').value;
+            alert("Prueba mensaje");
+            var idApi = document.getElementById('strId').value;
+            var nombre = document.getElementById('strNombre').value;
             var estado = document.getElementById('strEstado').value;
-            var especie = document.getElementById('strEstado').value;
-            var genero = document.getElementById('srtGenero').value;
-            var origen = document.getElementById('srtOrigen').value;
-            var localizacion = document.getElementById('srtLocalizacion').value;
-            var imagen = document.getElementById('srtImagen').value;
-
-            $ajax({
+            var especie = document.getElementById('strEspecie').value;
+            var genero = document.getElementById('strGenero').value;
+            var origen = document.getElementById('strOrigen').value;
+            var localizacion = document.getElementById('strLocalizacion').value;
+            var imagen = document.getElementById('strImagen').value;
+            alert(idApi + " - " + nombre + " - " + estado + " - " +especie + " - " + genero + " - " + origen + " - " + localizacion + " - " + imagen);
+            
+           
+            $.ajax({
                 type: "POST",
                 url: "scriptPhp.php",
                 data: {idApi: idApi, nombre: nombre, estado: estado, especie: especie, genero: genero, origen: origen, localizacion: localizacion, imagen: imagen},
@@ -69,9 +73,12 @@
                     alert(response);
                 },
                 error: function(){
-                    alert("Error");
+                    alert("Error en el servidor");
+                    alert(response);
                 }
             });
+
+            
         }
 
     </script>
@@ -87,25 +94,25 @@
         <p>
             <p>
                 <p>ID:</p>
-                <input type="text" value="" id="srtId">
+                <input type="text" value="" id="strId">
                 <p>Nombre:</p>
-                <input type="text" value="" id="srtNombre">
+                <input type="text" value="" id="strNombre">
                 <p>Estado:</p>
                 <input type="text" value="" id="strEstado">
                 <p>Especie:</p>
-                <input type="text" value="" id="srtEspecie">
+                <input type="text" value="" id="strEspecie">
                 <p>Genero:</p>
-                <input type="text" value="" id="srtGenero">
+                <input type="text" value="" id="strGenero">
                 <p>Origen:</p>
-                <input type="text" value="" id="srtOrigen">
+                <input type="text" value="" id="strOrigen">
                 <p>Localizacion:</p>
-                <input type="text" value="" id="srtLocalizacion">
+                <input type="text" value="" id="strLocalizacion">
                 <p>Imagen:</p>
                 <img id="imagen" src="" alt="Imagen del personaje" style="display:none;">
-                <input type="text" value="" id="srtImagen">                
+                <input type="text" value="" id="strImagen">                
             </p>
             <p>
-                <button id="Boton" onclick=guardarDatos()>Guardar</button>
+                <button id="Boton2" onclick=guardarDatos()>Guardar</button>
             </p>
 
         </p>
