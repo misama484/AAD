@@ -1,0 +1,110 @@
+*{
+    background-color: lightblue;
+}
+
+.cabecera{
+    background-color: rgba(0, 153, 255, 0.527);
+    width: auto;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    box-shadow: 0 10px 10px white;
+}
+.tituloPrincipal{
+    font-family: sans-serif;
+    font-size: 50px;
+    font-weight: 700;
+    color: black;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px white;
+    background-color: transparent;
+}
+.tituloSecundario{
+    font-family: sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: black;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px white;
+    background-color: transparent;
+}
+.panelInput{    
+    text-align: center;
+    padding-bottom: 10px;
+    width: 60%;
+    margin-left: 20%;
+    border-radius: 30px;
+    box-shadow: 0 10px 10px white;
+    background-color: rgba(0, 153, 255, 0.527);
+}
+.tituloFecha{
+    font-size: 20px;
+    background-color: transparent;
+    
+}
+.contenedorDatos{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+}
+.contenedor1{
+    margin-right: 100px;
+
+}
+.inputTitulo{
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: underline;
+    width: 300px;
+    margin: 5px;
+}
+.contenedor2{
+    margin-left: 100px;
+
+}
+.boton{
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgba(0, 153, 255, 0.527);
+}
+.inputBox{
+    width: 300px;
+    font-size: 15px;
+    border: 0;
+    text-align: center;
+}
+.imageContenedor{
+    position: relative;
+    align-content: center;
+    justify-content: center;
+    margin: 10px;
+}
+.image{
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    right: 0;
+    width: 50%;
+    padding: 20px;
+    
+
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AE04 T5 AAD</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <script type="text/javascript">
+        function mostrarDatos() {
+            var fecha = document.getElementById('fecha').value;
+            axios.get("https://api.nasa.gov/planetary/apod?api_key=sZs8lC0BUSMIXzLMnDCTKm1KTZJ8z9DgB3jy4r3d&date=" + fecha)
+            .then( response => {
+                var fecha = response.data.date;
+                var imagen = response.data.hdurl;
+                var titulo = response.data.title;
+                var miniatura = response.data.url;
+                document.getElementById('strFecha').value = fecha;
+                document.getElementById('strImagen').value = imagen;
+                document.getElementById('strTitulo').value = titulo;
+                document.getElementById('strMiniatura').value = miniatura;
+                document.getElementById('imagen').src = miniatura;
+                document.getElementById('imagen').style.display = "flex";
+            })
+            .catch(error => {
+                alert(error);
+            })
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript">
+        function guardarDatos(){
+            var fecha = document.getElementById('strFecha').value;
+            var imagen = document.getElementById('strImagen').value;
+            var titulo = document.getElementById('strTitulo').value;
+            var miniatura = document.getElementById('strMiniatura').value;
+            var datos = {
+                "fecha": fecha,
+                "imagen": imagen,
+                "titulo": titulo,
+                "miniatura": miniatura
+            }
+            alert(datos.fecha + " - " + datos.titulo);
+            $.ajax({
+                url: "script.php",
+                type: "POST",
+                data: datos,
+                success: function(response){
+                    alert(response);
+                }, 
+                error: function(error){
+                    alert(error);
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <div class="cabecera">
+        <h1 class="tituloPrincipal">nasa apod - a picture of the day</h1>
+        <h2 class="tituloSecundario">Actividad Evaluable 4 T5 AAD</h2>
+    </div>
+    <div class="panelInput">
+        <p class="tituloFecha">Introduce una fecha para ver la imagen del día<br>Pulsa directamente para ver la imagen de hoy</p>
+        <input type="date" id="fecha">
+        <button class="boton" id="btnMostrar" onclick="mostrarDatos()">Mostrar Imagen</button>        
+    </div>
+
+    
+        <div class="contenedorDatos" id="contenedorDatos">
+            <div class="contenedor1">
+                <p class="inputTitulo">Titulo</p>
+                <input class="inputBox" type="text" value="" id="strTitulo" readonly="readonly">
+                <p class="inputTitulo">Fecha</p>
+                <input class="inputBox" type="text" value="" id="strFecha" readonly="readonly">
+            </div>
+            <button class="boton" id="btnGuartdar" onclick=guardarDatos()>Guardar en BD</button>
+            <div class="contenedor2">
+                <p class="inputTitulo">Url de la Imagen</p>
+                <input class="inputBox" type="text" value="" id="strImagen" readonly="readonly">
+                <p class="inputTitulo">Url de la Miniatura</p>
+                <input class="inputBox" type="text" value="" id="strMiniatura" readonly="readonly">
+            </div>
+            
+
+            
+        </div>
+        <div id="contenedorImagen" class="imageContenedor">
+            <img class="image" id="imagen" src="" alt="Imagen de la nasa" style="display:none">            
+        </div>
+    </div>
+    <div>
+
+
+         
+    
+    
+</body>
+</html>
